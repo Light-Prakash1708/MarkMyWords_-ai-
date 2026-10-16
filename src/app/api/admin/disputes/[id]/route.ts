@@ -3,6 +3,6 @@ import { disputeDetail, requireStaff, resolveDispute } from "@/lib/services/admi
 
 export const GET = route((ctx, p) => disputeDetail(ctx.db, requireStaff(ctx.user), p.id));
 export const POST = route(async (ctx, p) => {
-  resolveDispute(ctx.db, requireStaff(ctx.user), p.id, await ctx.json());
+  (await resolveDispute(ctx.db, requireStaff(ctx.user), p.id, await ctx.json()));
   return { ok: true };
 });

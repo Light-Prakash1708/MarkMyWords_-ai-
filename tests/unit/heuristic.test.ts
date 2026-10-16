@@ -5,8 +5,8 @@ import { allHeuristicChecks } from "@/lib/sources";
 import { baseAnswers, freshDb, inputFor, joinParas } from "../helpers";
 
 describe("rule-based demo judge", async () => {
-  const { db } = freshDb();
-  const checks = allHeuristicChecks(db);
+  const { db } = (await freshDb());
+  const checks = (await allHeuristicChecks(db));
   const evalText = async (slug: string, text: string) => {
     const { input } = await inputFor(db, slug, text);
     return evaluateAnswer(input, new HeuristicJudge(), { isAi: false, providerName: "heuristic", providerLabel: "rules", patternChecks: checks });

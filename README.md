@@ -45,6 +45,15 @@ To make yourself an admin (review desk), add your email to `MMW_ADMIN_EMAILS` in
 
 > Production on plain `http://localhost`: session cookies are `Secure` in production. Browsers accept that on localhost; behind another host, use HTTPS, or set `MMW_INSECURE_COOKIES=true` for local testing only.
 
+### Deploy on Vercel
+
+1. In Vercel, **Add New → Project**, import `Light-Prakash1708/MarkMyWords_-ai-`. Framework preset: **Next.js** (no build settings to change).
+2. **Storage → Marketplace → Turso** (free tier): create a database and connect it to the project. This sets `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`. Tables and seed content are created automatically on the first request.
+3. Optional environment variables: `ANTHROPIC_API_KEY` (AI evaluator + OCR), `MMW_ADMIN_EMAILS` (your email, for the review desk), `MMW_SIGNING_SECRET` (any long random string; if unset, one is generated and stored in the database).
+4. **Deploy** (or Redeploy after adding variables).
+
+Without Turso the site still runs, but data lives in the function's `/tmp` and can reset at any time; a banner says so. Uploaded pages are stored in the database, photos are downsized in the browser to stay under Vercel's 4.5 MB request limit, and evaluations run after the response via `after()` (no background worker needed). `npm run test:e2e:vercel` runs the end-to-end suite in this mode.
+
 ### Configuration (`.env.local`)
 
 See [`.env.example`](.env.example). The main settings are: the provider and models; `MMW_EVAL_SAMPLES` (default 3); daily evaluation quota; global daily spend cap (circuit breaker); OCR page limit; retest delay (48h); and demo mode (shows questions still pending expert review, with a badge).
@@ -58,11 +67,11 @@ Student ─▶ Next.js (App Router, server components + route handlers)
               │
               ├─ services/        attempts · evaluations · hints · skills · admin · users
               ├─ eval-engine/     judges (LLM | rule-based) → aggregate → validate
-              ├─ sources/         SQLite FTS5 (BM25) retrieval · citation verification
+              ├─ sources/         BM25 retrieval · citation verification
               ├─ ocr/             vision transcription with per-line confidence
               ├─ security/        uploads (magic bytes, re-encode, PDF screening) · rate limits · signed URLs · clamd hook
-              └─ db/              SQLite (WAL) · reversible migrations · idempotent config/content sync
-Jobs: durable SQLite queue, kicked in-process and swept every 4s (src/instrumentation.ts)
+              └─ db/              libSQL: local SQLite file or hosted Turso · reversible migrations · config/content sync (skipped when unchanged)
+Jobs: durable queue in the database, claimed atomically; run via after() per request, plus a 4s sweep on long-running servers
 ```
 
 - **Exam config is data**: `config/exams/*.yaml`, `config/rubrics/*.json`, `config/directives.yaml`, `config/skills.yaml`. A test fails if any exam or paper code appears as a literal in `src/`.
@@ -107,7 +116,7 @@ Full details are in [`docs/build-report.md`](docs/build-report.md).
 - **Exam facts** (GS paper 250 marks/180 min, ~150/~250-word limits; the RBI Phase II pattern) were checked against secondary sources on 2026-10-16. Confirm them against the official notifications.
 - **Seed sources are unverified.** Constitutional articles are reproduced verbatim from memory, and the rest are MarkMyWords summaries. Every citation shows "unverified" until a reviewer verifies it in the review desk. Official links currently point to homepages, not deep links.
 - **OCR** quality on real Indian handwriting has not been measured. The confirmation step prevents silent errors, but transcription quality depends on the model.
-- **Single-node design** (SQLite, in-process queue). Move to Postgres + a worker before scaling horizontally.
+- **Simple job model.** Jobs run inside the request's `after()` window (up to 300 s on Vercel). That is enough for a few judge samples; a dedicated worker or queue service is the next step for heavy load.
 - **DPDP Act 2023**: the app has consent, export and hard delete, but this is not a legal compliance review.
 
 See [`docs/build-report.md`](docs/build-report.md) for the full list.

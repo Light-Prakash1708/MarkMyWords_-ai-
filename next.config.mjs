@@ -20,7 +20,13 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
-  serverExternalPackages: ["better-sqlite3", "sharp"],
+  // Native/runtime-loaded packages stay external to the server bundle.
+  serverExternalPackages: ["@libsql/client", "libsql", "sharp"],
+  // Exam config, content, migrations and benchmark reports are read from disk at runtime; make sure
+  // serverless bundles (e.g. Vercel functions) include them.
+  outputFileTracingIncludes: {
+    "/**": ["./config/**/*", "./content/**/*", "./migrations/**/*", "./benchmarks/reports/**/*"],
+  },
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

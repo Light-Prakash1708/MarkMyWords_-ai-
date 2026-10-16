@@ -9,6 +9,7 @@ import { signedUploadUrl } from "@/lib/security/signing";
 import { getOwnedAttempt, getSelfAssessment, latestOcr, latestTranscript, listUploads } from "@/lib/services/attempts";
 import { enabledCriteria, getRubricVersion, latestEvaluation, listDisputesForUser, rubricForQuestion } from "@/lib/services/evaluations";
 import { getLadder } from "@/lib/services/hints";
+import { hasPendingJobs, kickJobs } from "@/lib/services/jobs";
 import { getQuestion } from "@/lib/services/questions";
 import { AppError } from "@/lib/util/errors";
 import { QuestionMeta } from "@/components/QuestionBits";
@@ -20,6 +21,8 @@ import { Report } from "@/components/attempt/Report";
 import { HintLadder } from "@/components/attempt/HintLadder";
 
 export const dynamic = "force-dynamic";
+// Evaluation and OCR run after the response (see lib/services/jobs.ts); give them room on serverless.
+export const maxDuration = 300;
 export const metadata = { title: "Your attempt" };
 
 const STEPS = ["Write", "Transcript", "Self-check", "Feedback", "Repair"];
@@ -40,22 +43,24 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
   const user = await currentUser();
   if (!user) redirect("/login");
   const { id } = await params;
-  const db = getDb();
+  const db = (await getDb());
   let a;
   try {
-    a = getOwnedAttempt(db, user.id, id);
+    a = (await getOwnedAttempt(db, user.id, id));
   } catch (e) {
     if (e instanceof AppError && e.code === "NOT_FOUND") notFound();
     throw e;
   }
   const env = getEnv();
-  const q = getQuestion(db, a.question_id);
-  const tr = latestTranscript(db, a.id);
-  const uploads = listUploads(db, user.id, a.id).map((u) => ({ ...u, url: signedUploadUrl(u.id) }));
-  const ev = latestEvaluation(db, a.id);
-  const rv = ev ? getRubricVersion(db, (db.prepare("SELECT rubric_version_id FROM evaluations WHERE id = ?").get(ev.id) as { rubric_version_id: string }).rubric_version_id) : rubricForQuestion(db, q);
+  const q = (await getQuestion(db, a.question_id));
+  const tr = (await latestTranscript(db, a.id));
+  const uploads = (await listUploads(db, user.id, a.id)).map((u) => ({ ...u, url: signedUploadUrl(u.id) }));
+  const ev = (await latestEvaluation(db, a.id));
+  const rv = ev ? (await getRubricVersion(db, ((await db.get("SELECT rubric_version_id FROM evaluations WHERE id = ?", ev.id)) as { rubric_version_id: string }).rubric_version_id)) : (await rubricForQuestion(db, q));
   const crit = enabledCriteria(rv, a.mode);
   const aiAvailable = !!getProvider();
+  // While the page polls during transcription/evaluation, make sure queued work keeps moving.
+  if (await hasPendingJobs(db)) kickJobs(db);
 
   let body: React.ReactNode;
   let step = 0;
@@ -79,8 +84,8 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
       );
   } else if (a.status === "awaiting_transcription") {
     step = 1;
-    const ocr = latestOcr(db, a.id);
-    const pendingJob = db.prepare("SELECT 1 FROM jobs WHERE kind = 'ocr' AND status IN ('queued','running') AND payload LIKE ?").get(`%${a.id}%`);
+    const ocr = (await latestOcr(db, a.id));
+    const pendingJob = (await db.get("SELECT 1 FROM jobs WHERE kind = 'ocr' AND status IN ('queued','running') AND payload LIKE ?", `%${a.id}%`));
     if (env.ocrProvider === "manual" || (ocr && ocr.status === "failed" && !pendingJob)) {
       body = (
         <ManualTranscribe
@@ -98,7 +103,7 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
     }
   } else if (a.status === "awaiting_confirmation") {
     step = 1;
-    const ocr = latestOcr(db, a.id);
+    const ocr = (await latestOcr(db, a.id));
     body = ocr?.built ? <ConfirmTranscript attemptId={a.id} built={ocr.built} uploads={uploads} /> : <PenSpinner label="Preparing your transcript…" />;
   } else if (a.status === "ready") {
     step = 2;
@@ -106,7 +111,7 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
     body = (
       <>
         {failed && <div className="error-box" style={{ marginBottom: 14 }}>The last evaluation attempt failed ({failed}). Your answer is safe — try again.</div>}
-        <SelfAssess attemptId={a.id} criteria={crit} maxBand={rv.max_band} existing={getSelfAssessment(db, a.id)?.ratings ?? null} aiAvailable={aiAvailable} />
+        <SelfAssess attemptId={a.id} criteria={crit} maxBand={rv.max_band} existing={(await getSelfAssessment(db, a.id))?.ratings ?? null} aiAvailable={aiAvailable} />
       </>
     );
   } else if (a.status === "evaluating") {
@@ -119,13 +124,9 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
     );
   } else if (a.status === "evaluated" && ev?.result) {
     step = 4;
-    const disputes = listDisputesForUser(db, user.id, ev.id);
-    const retest = db
-      .prepare(
-        `SELECT r.id, r.due_at, s.name AS skill_name, q.slug AS question_slug FROM retest_schedule r JOIN skill_tags s ON s.code = r.skill_tag LEFT JOIN questions q ON q.id = r.question_id
-         WHERE r.source_attempt_id = ? AND r.status = 'scheduled' ORDER BY r.due_at LIMIT 1`,
-      )
-      .get(a.id) as { id: string; due_at: string; skill_name: string; question_slug: string } | undefined;
+    const disputes = (await listDisputesForUser(db, user.id, ev.id));
+    const retest = (await db.get(`SELECT r.id, r.due_at, s.name AS skill_name, q.slug AS question_slug FROM retest_schedule r JOIN skill_tags s ON s.code = r.skill_tag LEFT JOIN questions q ON q.id = r.question_id
+         WHERE r.source_attempt_id = ? AND r.status = 'scheduled' ORDER BY r.due_at LIMIT 1`, a.id)) as { id: string; due_at: string; skill_name: string; question_slug: string } | undefined;
     body = (
       <div className="stack" style={{ ["--gap" as string]: "26px" }}>
         <Report
@@ -142,7 +143,7 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
           retestOffer={retest ?? null}
           heuristicNotice={ev.result.evaluator.is_ai ? null : HEURISTIC_NOTICE}
         />
-        <HintLadder attemptId={a.id} initial={getLadder(db, user.id, a.id)} />
+        <HintLadder attemptId={a.id} initial={await getLadder(db, user.id, a.id)} />
       </div>
     );
   } else {

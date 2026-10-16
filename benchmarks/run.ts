@@ -61,12 +61,11 @@ const sd = (xs: number[]) => {
 
 async function main() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mmw-bench-"));
-  process.env.MMW_UPLOAD_DIR = path.join(dir, "uploads");
-  const db: DB = openDb(path.join(dir, "bench.db"));
-  migrate(db);
-  ensureSeeded(db);
+  const db: DB = (await openDb(path.join(dir, "bench.db")));
+  (await migrate(db));
+  (await ensureSeeded(db));
   const { user } = await signup(db, { email: `bench-${Date.now()}@example.com`, password: "benchmark password", display_name: "Bench" }, "127.0.0.1");
-  const checks: CheckWithSource[] = allHeuristicChecks(db);
+  const checks: CheckWithSource[] = (await allHeuristicChecks(db));
 
   const env = getEnv();
   let judge;
@@ -77,19 +76,19 @@ async function main() {
     isAi = true;
   } else judge = new HeuristicJudge();
 
-  const inputFor = (slug: string, text: string): EvaluationInput => {
-    const q = getQuestion(db, slug);
-    db.prepare("DELETE FROM rate_limits").run(); // benchmark-only private DB: app rate limits do not apply
-    const a = createAttempt(db, user.id, { question_id: q.id, mode: "typed" });
-    submitTyped(db, user.id, a.id, { text });
-    const row = db.prepare("SELECT * FROM attempts WHERE id = ?").get(a.id) as Parameters<typeof buildEvaluationInput>[1];
-    return buildEvaluationInput(db, row, rubricForQuestion(db, q).id, samples);
+  const inputFor = async (slug: string, text: string): Promise<EvaluationInput> => {
+    const q = (await getQuestion(db, slug));
+    (await db.run("DELETE FROM rate_limits")); // benchmark-only private DB: app rate limits do not apply
+    const a = (await createAttempt(db, user.id, { question_id: q.id, mode: "typed" }));
+    (await submitTyped(db, user.id, a.id, { text }));
+    const row = (await db.get("SELECT * FROM attempts WHERE id = ?", a.id)) as Parameters<typeof buildEvaluationInput>[1];
+    return buildEvaluationInput(db, row, (await rubricForQuestion(db, q)).id, samples);
   };
   let tokensIn = 0;
   let tokensOut = 0;
   const latencies: number[] = [];
   const evalText = async (slug: string, text: string): Promise<EngineRun & { input: EvaluationInput }> => {
-    const input = inputFor(slug, text);
+    const input = (await inputFor(slug, text));
     const t0 = Date.now();
     const run = await evaluateAnswer(input, judge, { isAi, providerName: providerName === "anthropic" ? "anthropic" : "heuristic", providerLabel: providerName, patternChecks: checks });
     latencies.push(Date.now() - t0);

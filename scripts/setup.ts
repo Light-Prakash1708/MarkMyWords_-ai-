@@ -22,10 +22,10 @@ async function main() {
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
   }
   const { getDb } = await import("../src/lib/db");
-  const db = getDb();
-  const q = (db.prepare("SELECT COUNT(*) AS n FROM questions").get() as { n: number }).n;
-  const s = (db.prepare("SELECT COUNT(*) AS n FROM sources").get() as { n: number }).n;
+  const db = (await getDb());
+  const q = ((await db.get("SELECT COUNT(*) AS n FROM questions")) as { n: number }).n;
+  const s = ((await db.get("SELECT COUNT(*) AS n FROM sources")) as { n: number }).n;
   console.log(`Database ready: ${q} questions, ${s} sources.`);
   console.log("Next: npm run build && npm start   (or npm run dev)");
 }
-main();
+(await main());

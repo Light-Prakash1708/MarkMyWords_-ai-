@@ -76,15 +76,17 @@ export async function evaluateAnswer(
   const nSamples = judge.name === "heuristic" ? 1 : input.engine.samples;
   const samples: RawJudgement[] = [];
   const errors: string[] = [];
-  for (let i = 0; i < nSamples; i++) {
-    try {
-      const out = await judge.judge(input, i);
-      samples.push(out.raw);
-      usage.inputTokens += out.usage.inputTokens;
-      usage.outputTokens += out.usage.outputTokens;
-      models.add(out.model);
-    } catch (e) {
-      errors.push((e as Error).message);
+  // Samples are independent, so run them concurrently (keeps evaluation inside serverless time
+  // limits); results are consumed in sample order so aggregation stays deterministic.
+  const settled = await Promise.allSettled(Array.from({ length: nSamples }, (_, i) => judge.judge(input, i)));
+  for (const r of settled) {
+    if (r.status === "fulfilled") {
+      samples.push(r.value.raw);
+      usage.inputTokens += r.value.usage.inputTokens;
+      usage.outputTokens += r.value.usage.outputTokens;
+      models.add(r.value.model);
+    } else {
+      errors.push((r.reason as Error)?.message ?? String(r.reason));
     }
   }
   if (samples.length === 0) throw new Error(`All evaluation samples failed: ${errors.join(" | ").slice(0, 500)}`);

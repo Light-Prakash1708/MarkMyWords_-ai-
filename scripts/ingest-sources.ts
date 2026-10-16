@@ -24,7 +24,7 @@ for (const s of parsed.sources) for (const c of s.heuristic_checks) {
 }
 const dest = path.join(getEnv().contentDir, "sources", path.basename(file));
 fs.copyFileSync(file, dest);
-const db = openDb(getEnv().dbPath);
-migrate(db);
-ensureSeeded(db);
+const db = await openDb(getEnv().dbUrl, getEnv().dbAuthToken);
+(await migrate(db));
+(await ensureSeeded(db));
 console.log(`Ingested ${parsed.sources.length} source(s) from ${path.basename(file)}.`);

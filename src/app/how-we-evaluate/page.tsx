@@ -20,12 +20,12 @@ function latestBenchmark() {
   }
 }
 
-export default function HowWeEvaluate() {
-  const db = getDb();
+export default async function HowWeEvaluate() {
+  const db = (await getDb());
   const env = getEnv();
-  const rvs = db.prepare("SELECT r.code, rv.version, rv.status, rv.criteria, rv.disclaimer FROM rubric_versions rv JOIN rubrics r ON r.id = rv.rubric_id WHERE rv.status IN ('active','calibrating') ORDER BY r.code").all() as { code: string; version: string; status: string; criteria: string; disclaimer: string }[];
-  const papers = paperSummaries(db, null);
-  const sources = db.prepare("SELECT verification_status, COUNT(*) AS n FROM sources GROUP BY verification_status").all() as { verification_status: string; n: number }[];
+  const rvs = (await db.all("SELECT r.code, rv.version, rv.status, rv.criteria, rv.disclaimer FROM rubric_versions rv JOIN rubrics r ON r.id = rv.rubric_id WHERE rv.status IN ('active','calibrating') ORDER BY r.code")) as { code: string; version: string; status: string; criteria: string; disclaimer: string }[];
+  const papers = (await paperSummaries(db, null));
+  const sources = (await db.all("SELECT verification_status, COUNT(*) AS n FROM sources GROUP BY verification_status")) as { verification_status: string; n: number }[];
   const bench = latestBenchmark();
   const first = rvs[0];
   const crit = parseJson<RubricCriterion[]>(first?.criteria, []);

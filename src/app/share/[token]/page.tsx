@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Share({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const data = readShareLink(getDb(), token);
+  const data = (await readShareLink(await getDb(), token));
   if (!data) notFound();
   const w = data.report;
   return (

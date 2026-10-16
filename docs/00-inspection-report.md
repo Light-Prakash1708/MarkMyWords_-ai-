@@ -21,7 +21,7 @@ Everything was missing at the start. See [build-report.md](build-report.md) for 
 | pg-boss queue | Durable SQLite jobs table + in-process sweeper | Same durability semantics on a single node |
 | S3-compatible storage | Private local directory, signed short-lived URLs | Same access model; can be swapped for S3 |
 | Email OTP / OAuth | Email + password (scrypt) | No email service available; OTP and OAuth remain open items |
-| Drizzle ORM | Typed raw SQL via better-sqlite3 | Fewer moving parts; migrations are plain reversible SQL |
+| Drizzle ORM | Typed raw SQL via @libsql/client (local SQLite file or hosted libSQL/Turso) | Fewer moving parts; migrations are plain reversible SQL |
 
 ## 6. Questions for the owner (answered by defaults)
 - *Provider:* Anthropic (Claude) via `ANTHROPIC_API_KEY`. Without it, a labelled rule-based demo evaluator runs.

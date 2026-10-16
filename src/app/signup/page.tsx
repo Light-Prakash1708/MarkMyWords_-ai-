@@ -11,7 +11,7 @@ export default async function Signup() {
   if (await currentUser()) redirect("/today");
   return (
     <AuthShell kicker="Free to start" title={<>Write first. <span className="boxed pink">Improve</span> for real.</>}>
-      <AuthForm mode="signup" exams={listExams(getDb()).map((e) => ({ code: e.code, label: e.name, active: e.status === "active" }))} />
+      <AuthForm mode="signup" exams={(await listExams(await getDb())).map((e) => ({ code: e.code, label: e.name, active: e.status === "active" }))} />
     </AuthShell>
   );
 }

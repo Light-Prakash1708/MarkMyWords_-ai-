@@ -4,21 +4,21 @@ import { getOwnedAttempt, latestOcr, latestTranscript, listUploads, saveDraft } 
 import { latestEvaluation } from "@/lib/services/evaluations";
 import { signedUploadUrl } from "@/lib/security/signing";
 
-export const GET = route((ctx, p) => {
+export const GET = route(async (ctx, p) => {
   const u = ctx.requireUser();
-  const a = getOwnedAttempt(ctx.db, u.id, p.id);
-  const ocr = latestOcr(ctx.db, a.id);
+  const a = (await getOwnedAttempt(ctx.db, u.id, p.id));
+  const ocr = (await latestOcr(ctx.db, a.id));
   return {
     attempt: a,
-    transcript: latestTranscript(ctx.db, a.id),
+    transcript: (await latestTranscript(ctx.db, a.id)),
     ocr: ocr ? { status: ocr.status, error: ocr.error, built: ocr.built } : null,
-    uploads: listUploads(ctx.db, u.id, a.id).map((x) => ({ ...x, url: signedUploadUrl(x.id) })),
-    evaluation: latestEvaluation(ctx.db, a.id),
+    uploads: (await listUploads(ctx.db, u.id, a.id)).map((x) => ({ ...x, url: signedUploadUrl(x.id) })),
+    evaluation: (await latestEvaluation(ctx.db, a.id)),
   };
 });
 
 export const PATCH = route(async (ctx, p) => {
   const body = z.object({ draft_text: z.string() }).parse(await ctx.json());
-  saveDraft(ctx.db, ctx.requireUser().id, p.id, body.draft_text);
+  (await saveDraft(ctx.db, ctx.requireUser().id, p.id, body.draft_text));
   return { ok: true, saved_at: new Date().toISOString() };
 });

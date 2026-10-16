@@ -23,15 +23,15 @@ export default async function Today({ searchParams }: { searchParams: Promise<{ 
   const user = await currentUser();
   if (!user) redirect("/login");
   const sp = await searchParams;
-  const db = getDb();
+  const db = (await getDb());
   const env = getEnv();
-  const qotd = getQotd(db, user.target_exam_code);
-  const recs = recommendNext(db, user.id, 3).filter((r) => r.question.id !== qotd?.id);
-  const retests = dueRetests(db, user.id);
-  const progress = getProgress(db, user.id);
-  const recent = listAttempts(db, user.id, 5);
-  const streak = practiceStreak(db, user.id);
-  const syl = qotd ? syllabusTitles(db, qotd.syllabus_codes) : {};
+  const qotd = (await getQotd(db, user.target_exam_code));
+  const recs = (await recommendNext(db, user.id, 3)).filter((r) => r.question.id !== qotd?.id);
+  const retests = (await dueRetests(db, user.id));
+  const progress = (await getProgress(db, user.id));
+  const recent = (await listAttempts(db, user.id, 5));
+  const streak = (await practiceStreak(db, user.id));
+  const syl = qotd ? (await syllabusTitles(db, qotd.syllabus_codes)) : {};
   const weakest = progress.skills.filter((s) => s.occurrences > 0).slice(0, 4);
 
   return (

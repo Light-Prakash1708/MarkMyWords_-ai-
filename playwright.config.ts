@@ -4,6 +4,9 @@ import path from "node:path";
 
 const port = Number(process.env.E2E_PORT ?? 3200);
 const dataDir = path.join(os.tmpdir(), `mmw-e2e-${Date.now()}`);
+// E2E_SIMULATE_VERCEL=1 runs the server the way Vercel does: no background sweeper, so every job
+// must complete through after(), and the signing secret is bootstrapped from the database.
+const simulateVercel = process.env.E2E_SIMULATE_VERCEL === "1";
 
 export default defineConfig({
   testDir: "e2e",
@@ -23,14 +26,13 @@ export default defineConfig({
     timeout: 60_000,
     env: {
       MMW_DB_PATH: path.join(dataDir, "e2e.db"),
-      MMW_UPLOAD_DIR: path.join(dataDir, "uploads"),
       MMW_PROVIDER: "heuristic",
       MMW_OCR_PROVIDER: "mock",
       MMW_ALLOW_MOCK: "true",
       MMW_INSECURE_COOKIES: "true",
       MMW_ADMIN_EMAILS: "admin@e2e.test",
-      MMW_SIGNING_SECRET: "e2e-signing-secret",
       ANTHROPIC_API_KEY: "",
+      ...(simulateVercel ? { VERCEL: "1", MMW_SIGNING_SECRET: "" } : { MMW_SIGNING_SECRET: "e2e-signing-secret" }),
     },
   },
 });

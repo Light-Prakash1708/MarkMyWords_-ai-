@@ -8,7 +8,7 @@ import { AppError } from "./util/errors";
 /** Server-component helper: the logged-in user, or null. */
 export async function currentUser(): Promise<SessionUser | null> {
   const jar = await cookies();
-  return userForToken(getDb(), jar.get(SESSION_COOKIE)?.value);
+  return userForToken(await getDb(), jar.get(SESSION_COOKIE)?.value);
 }
 
 export function clientIp(req: NextRequest): string {
@@ -51,8 +51,8 @@ export function route(fn: (ctx: Ctx, params: Record<string, string>) => Promise<
   return async (req: NextRequest, p?: Params) => {
     try {
       assertSameOrigin(req);
-      const db = getDb();
-      const user = userForToken(db, req.cookies.get(SESSION_COOKIE)?.value);
+      const db = (await getDb());
+      const user = (await userForToken(db, req.cookies.get(SESSION_COOKIE)?.value));
       const ctx: Ctx = {
         req,
         db,

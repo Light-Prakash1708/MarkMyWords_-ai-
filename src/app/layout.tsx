@@ -6,6 +6,7 @@ import "@fontsource/instrument-serif/400-italic.css";
 import "./globals.css";
 import { TopBar } from "@/components/TopBar";
 import { RevealRoot } from "@/components/Reveal";
+import { getEnv } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: { default: "MarkMyWords — answer-writing coach", template: "%s · MarkMyWords" },
@@ -33,6 +34,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
+        {getEnv().ephemeralStorage && (
+          <div className="storage-banner" role="status">
+            Preview mode: no database is connected, so accounts and answers may reset. Connect a hosted
+            database (TURSO_DATABASE_URL) to keep them.
+          </div>
+        )}
         <TopBar />
         <main id="main">{children}</main>
         <RevealRoot />

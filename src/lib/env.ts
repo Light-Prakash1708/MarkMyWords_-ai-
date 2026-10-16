@@ -12,6 +12,12 @@ function num(v: string | undefined, d: number): number {
 export type ProviderName = "anthropic" | "heuristic" | "mock";
 export type OcrProviderName = "anthropic" | "mock" | "manual";
 
+/** MMW_SIGNING_SECRET if it was actually set (the .env.example placeholder does not count). */
+export function configuredSigningSecret(): string | undefined {
+  const v = process.env.MMW_SIGNING_SECRET?.trim();
+  return v && v !== "change-me" && v.length >= 16 ? v : undefined;
+}
+
 /** Read configuration at call time so tests can override process.env. */
 export function getEnv() {
   const cwd = process.cwd();
@@ -27,15 +33,24 @@ export function getEnv() {
   const ocrProvider: OcrProviderName =
     ocrEnv === "anthropic" || ocrEnv === "mock" || ocrEnv === "manual" ? ocrEnv : anthropicKey ? "anthropic" : "manual";
   const isProd = process.env.NODE_ENV === "production";
+  const onVercel = !!process.env.VERCEL;
+  // Hosted libSQL (Turso). The Vercel Marketplace integration sets TURSO_DATABASE_URL / TURSO_AUTH_TOKEN.
+  const remoteUrl = process.env.TURSO_DATABASE_URL || process.env.LIBSQL_URL || process.env.MMW_DATABASE_URL || "";
+  const remoteToken = process.env.TURSO_AUTH_TOKEN || process.env.LIBSQL_AUTH_TOKEN || process.env.MMW_DATABASE_AUTH_TOKEN || undefined;
+  // Without a hosted DB on a serverless platform, fall back to /tmp (works, but resets with the instance).
+  const localPath = process.env.MMW_DB_PATH || (onVercel ? "/tmp/markmywords.db" : path.join(cwd, "data", "markmywords.db"));
   return {
     isProd,
     isTest: process.env.NODE_ENV === "test" || process.env.VITEST === "true",
-    dbPath: process.env.MMW_DB_PATH || path.join(cwd, "data", "markmywords.db"),
-    uploadDir: process.env.MMW_UPLOAD_DIR || path.join(cwd, "data", "uploads"),
+    onVercel,
+    dbUrl: remoteUrl || localPath,
+    dbAuthToken: remoteUrl ? remoteToken : undefined,
+    /** True when data lives somewhere that can disappear (serverless /tmp). Shown as a banner. */
+    ephemeralStorage: !remoteUrl && onVercel,
     configDir: process.env.MMW_CONFIG_DIR || path.join(cwd, "config"),
     contentDir: process.env.MMW_CONTENT_DIR || path.join(cwd, "content"),
     migrationsDir: path.join(cwd, "migrations"),
-    signingSecret: process.env.MMW_SIGNING_SECRET || "dev-only-insecure-signing-secret-change-me",
+    signingSecret: configuredSigningSecret() || (globalThis as { __mmwSecret?: string }).__mmwSecret || "dev-only-insecure-signing-secret-change-me",
     anthropicKey,
     anthropicBaseUrl: process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com",
     provider,
@@ -63,8 +78,9 @@ export function getEnv() {
     secureCookies: isProd && process.env.MMW_INSECURE_COOKIES !== "true",
     clamavHost: process.env.MMW_CLAMAV_HOST || undefined,
     clamavPort: int(process.env.MMW_CLAMAV_PORT, 3310),
-    maxImageBytes: int(process.env.MMW_MAX_IMAGE_BYTES, 10 * 1024 * 1024),
-    maxPdfBytes: int(process.env.MMW_MAX_PDF_BYTES, 25 * 1024 * 1024),
+    // Vercel functions accept request bodies up to 4.5 MB; the browser downsizes photos before upload.
+    maxImageBytes: int(process.env.MMW_MAX_IMAGE_BYTES, onVercel ? 4 * 1024 * 1024 : 10 * 1024 * 1024),
+    maxPdfBytes: int(process.env.MMW_MAX_PDF_BYTES, onVercel ? 4 * 1024 * 1024 : 25 * 1024 * 1024),
     maxPagesPerAttempt: int(process.env.MMW_MAX_PAGES, 12),
   };
 }

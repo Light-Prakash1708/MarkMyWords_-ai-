@@ -43,11 +43,11 @@ function raw(input: EvaluationInput, band = 3, extra: Partial<RawJudgement> = {}
 }
 
 describe("evaluation engine with a model judge (mock provider)", async () => {
-  const { db } = freshDb();
+  const { db } = (await freshDb());
   const { input } = await inputFor(db, "gs3-monetary-transmission", ANSWER);
-  const run = (handler: (i: number) => unknown, samples = 3) => {
+  const run = async (handler: (i: number) => unknown, samples = 3) => {
     const p = new MockProvider({ judge: (_r, i) => handler(i) });
-    return evaluateAnswer({ ...structuredClone(input), engine: { ...input.engine, samples } }, new LlmJudge(p, "mock"), { isAi: true, providerName: "mock", providerLabel: "mock", patternChecks: allHeuristicChecks(db) });
+    return evaluateAnswer({ ...structuredClone(input), engine: { ...input.engine, samples } }, new LlmJudge(p, "mock"), { isAi: true, providerName: "mock", providerLabel: "mock", patternChecks: (await allHeuristicChecks(db)) });
   };
 
   it("computes totals in code from median bands and passes strict validation", async () => {
@@ -160,7 +160,7 @@ describe("evaluation engine with a model judge (mock provider)", async () => {
 });
 
 describe("strict validator catches tampering", async () => {
-  const { db } = freshDb();
+  const { db } = (await freshDb());
   const { input } = await inputFor(db, "gs3-monetary-transmission", ANSWER);
   const p = new MockProvider({ judge: () => raw(input, 3) });
   const base = (await evaluateAnswer(structuredClone(input), new LlmJudge(p, "mock"), { isAi: true, providerName: "mock", providerLabel: "mock" })).result;

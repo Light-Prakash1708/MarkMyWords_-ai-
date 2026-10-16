@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function History() {
   const user = await currentUser();
   if (!user) redirect("/login");
-  const rows = listAttempts(getDb(), user.id, 200);
+  const rows = (await listAttempts(await getDb(), user.id, 200));
   return (
     <div className="page container">
       <h1 className="h1" style={{ marginBottom: 18 }}>Every answer you&apos;ve written</h1>

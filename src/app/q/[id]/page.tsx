@@ -15,20 +15,20 @@ export default async function QuestionPage({ params }: { params: Promise<{ id: s
   const user = await currentUser();
   if (!user) redirect("/login");
   const { id } = await params;
-  const db = getDb();
+  const db = (await getDb());
   let q;
   try {
-    q = getPracticableQuestion(db, id);
+    q = (await getPracticableQuestion(db, id));
   } catch (e) {
     if (e instanceof AppError && e.code === "NOT_FOUND") notFound();
     throw e;
   }
-  const directives = directivesFor(db, q.directive_codes);
-  const syl = syllabusTitles(db, q.syllabus_codes);
-  const dossier = getDossier(db, user.id, q.id);
-  const rv = rubricForQuestion(db, q);
-  const prior = db.prepare("SELECT id, status, attempt_kind, created_at FROM attempts WHERE user_id = ? AND question_id = ? ORDER BY created_at DESC").all(user.id, q.id) as { id: string; status: string; attempt_kind: string; created_at: string }[];
-  const retest = dueRetests(db, user.id).find((r) => r.question_id === q.id && r.is_due);
+  const directives = (await directivesFor(db, q.directive_codes));
+  const syl = (await syllabusTitles(db, q.syllabus_codes));
+  const dossier = (await getDossier(db, user.id, q.id));
+  const rv = (await rubricForQuestion(db, q));
+  const prior = (await db.all("SELECT id, status, attempt_kind, created_at FROM attempts WHERE user_id = ? AND question_id = ? ORDER BY created_at DESC", user.id, q.id)) as { id: string; status: string; attempt_kind: string; created_at: string }[];
+  const retest = (await dueRetests(db, user.id)).find((r) => r.question_id === q.id && r.is_due);
   return (
     <div className="page container">
       <Link href="/practice" className="small">← Question bank</Link>

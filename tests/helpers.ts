@@ -14,12 +14,11 @@ export function tempDir(prefix = "mmw-test-") {
 }
 
 /** A fresh, migrated and seeded SQLite database in a temp directory. */
-export function freshDb(): { db: DB; dir: string } {
+export async function freshDb(): Promise<{ db: DB; dir: string }> {
   const dir = tempDir();
-  process.env.MMW_UPLOAD_DIR = path.join(dir, "uploads");
-  const db = openDb(path.join(dir, "test.db"));
-  migrate(db);
-  ensureSeeded(db);
+  const db = (await openDb(path.join(dir, "test.db")));
+  (await migrate(db));
+  (await ensureSeeded(db));
   return { db, dir };
 }
 
@@ -33,12 +32,12 @@ export async function makeUser(db: DB, name = "Student") {
 /** Create a submitted typed attempt and return a ready-to-run EvaluationInput. */
 export async function inputFor(db: DB, slug: string, text: string, opts: { samples?: number } = {}): Promise<{ input: EvaluationInput; userId: string; attemptId: string }> {
   const u = await makeUser(db);
-  const q = getQuestion(db, slug);
-  const a = createAttempt(db, u.id, { question_id: q.id, mode: "typed" });
-  submitTyped(db, u.id, a.id, { text });
-  const rv = rubricForQuestion(db, q);
-  const row = db.prepare("SELECT * FROM attempts WHERE id = ?").get(a.id) as Parameters<typeof buildEvaluationInput>[1];
-  return { input: buildEvaluationInput(db, row, rv.id, opts.samples ?? 3), userId: u.id, attemptId: a.id };
+  const q = (await getQuestion(db, slug));
+  const a = (await createAttempt(db, u.id, { question_id: q.id, mode: "typed" }));
+  (await submitTyped(db, u.id, a.id, { text }));
+  const rv = (await rubricForQuestion(db, q));
+  const row = (await db.get("SELECT * FROM attempts WHERE id = ?", a.id)) as Parameters<typeof buildEvaluationInput>[1];
+  return { input: (await buildEvaluationInput(db, row, rv.id, opts.samples ?? 3)), userId: u.id, attemptId: a.id };
 }
 
 export function joinParas(ps: { text: string }[]) {

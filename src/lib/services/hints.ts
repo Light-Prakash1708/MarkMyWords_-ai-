@@ -41,10 +41,10 @@ const NUDGES: Record<string, (quote: string) => string> = {
   "TIME.incomplete": () => "Before writing, can you plan 3–4 points and a word budget for each part?",
 };
 
-export function ladderState(db: DB, attemptId: string): LadderState {
-  const row = db.prepare("SELECT max_rung_revealed, revealed FROM hint_ladder_state WHERE attempt_id = ?").get(attemptId) as { max_rung_revealed: number; revealed: string } | undefined;
-  const ev = latestEvaluation(db, attemptId);
-  const rewrite = db.prepare("SELECT 1 FROM attempts WHERE parent_attempt_id = ? AND submitted_at IS NOT NULL LIMIT 1").get(attemptId);
+export async function ladderState(db: DB, attemptId: string): Promise<LadderState> {
+  const row = (await db.get("SELECT max_rung_revealed, revealed FROM hint_ladder_state WHERE attempt_id = ?", attemptId)) as { max_rung_revealed: number; revealed: string } | undefined;
+  const ev = (await latestEvaluation(db, attemptId));
+  const rewrite = (await db.get("SELECT 1 FROM attempts WHERE parent_attempt_id = ? AND submitted_at IS NOT NULL LIMIT 1", attemptId));
   return {
     evaluated: ev?.status === "completed",
     maxRungRevealed: row?.max_rung_revealed ?? -1,
@@ -53,10 +53,10 @@ export function ladderState(db: DB, attemptId: string): LadderState {
   };
 }
 
-export function getLadder(db: DB, userId: string, attemptId: string) {
-  const a = getOwnedAttempt(db, userId, attemptId);
-  const state = ladderState(db, a.id);
-  const contents = (db.prepare("SELECT rung, content, generator FROM hint_content WHERE attempt_id = ? ORDER BY rung").all(a.id) as { rung: number; content: string; generator: string }[]).map((r) => ({
+export async function getLadder(db: DB, userId: string, attemptId: string) {
+  const a = (await getOwnedAttempt(db, userId, attemptId));
+  const state = (await ladderState(db, a.id));
+  const contents = ((await db.all("SELECT rung, content, generator FROM hint_content WHERE attempt_id = ? ORDER BY rung", a.id)) as { rung: number; content: string; generator: string }[]).map((r) => ({
     rung: r.rung,
     generator: r.generator,
     content: parseJson<unknown>(r.content, null),
@@ -74,40 +74,36 @@ export function getLadder(db: DB, userId: string, attemptId: string) {
 }
 
 export async function revealRung(db: DB, userId: string, attemptId: string, input: unknown) {
-  const a = getOwnedAttempt(db, userId, attemptId);
+  const a = (await getOwnedAttempt(db, userId, attemptId));
   const p = z.object({ rung: z.number().int().min(0).max(5), confirm: z.boolean().optional() }).parse(input);
   const env = getEnv();
   if (!a.submitted_at) throw new AppError("ATTEMPT_REQUIRED", "Write and submit your own answer first.");
-  const state = ladderState(db, a.id);
+  const state = (await ladderState(db, a.id));
   const check = canReveal(state, p.rung, { confirm: p.confirm, exemplarWaitMinutes: env.exemplarWaitMinutes });
   if (!check.ok) throw new AppError(check.code ?? "RUNG_LOCKED", check.reason ?? "Locked.", { details: { unlocks_at: check.unlocksAt } });
-  rateLimit(db, `hints:${userId}`, env.hintCallsPerHour, 3600);
-  const existing = db.prepare("SELECT content, generator FROM hint_content WHERE attempt_id = ? AND rung = ?").get(a.id, p.rung) as { content: string; generator: string } | undefined;
+  (await rateLimit(db, `hints:${userId}`, env.hintCallsPerHour, 3600));
+  const existing = (await db.get("SELECT content, generator FROM hint_content WHERE attempt_id = ? AND rung = ?", a.id, p.rung)) as { content: string; generator: string } | undefined;
   let content: unknown;
   let generator: string;
   if (existing) {
     content = parseJson(existing.content, null);
     generator = existing.generator;
   } else {
-    const ev = latestEvaluation(db, a.id)!;
+    const ev = (await latestEvaluation(db, a.id))!;
     const r = ev.result!;
     ({ content, generator } = await generateRung(db, userId, a.id, a.question_id, r, p.rung));
-    db.prepare("INSERT INTO hint_content (id, attempt_id, rung, content, generator, created_at) VALUES (?,?,?,?,?,?)").run(newId(), a.id, p.rung, toJson(content), generator, nowIso());
+    (await db.run("INSERT INTO hint_content (id, attempt_id, rung, content, generator, created_at) VALUES (?,?,?,?,?,?)", newId(), a.id, p.rung, toJson(content), generator, nowIso()));
   }
   const next = reveal(state, p.rung);
-  db.prepare(
-    "INSERT INTO hint_ladder_state (attempt_id, max_rung_revealed, revealed) VALUES (?,?,?) ON CONFLICT(attempt_id) DO UPDATE SET max_rung_revealed = excluded.max_rung_revealed, revealed = excluded.revealed",
-  ).run(a.id, next.maxRungRevealed, toJson(next.revealedAt));
+  (await db.run("INSERT INTO hint_ladder_state (attempt_id, max_rung_revealed, revealed) VALUES (?,?,?) ON CONFLICT(attempt_id) DO UPDATE SET max_rung_revealed = excluded.max_rung_revealed, revealed = excluded.revealed", a.id, next.maxRungRevealed, toJson(next.revealedAt)));
   if (p.rung === 5) {
-    db.prepare("INSERT INTO audit_log (id, actor_user_id, action, target_type, target_id, reason, created_at) VALUES (?,?,?,?,?,?,?)").run(
-      newId(), userId, "full_sample_revealed", "attempt", a.id, "explicit student request after evaluation", nowIso(),
-    );
+    (await db.run("INSERT INTO audit_log (id, actor_user_id, action, target_type, target_id, reason, created_at) VALUES (?,?,?,?,?,?,?)", newId(), userId, "full_sample_revealed", "attempt", a.id, "explicit student request after evaluation", nowIso()));
   }
   return { rung: p.rung, content, generator };
 }
 
 async function generateRung(db: DB, userId: string, attemptId: string, questionId: string, r: EvaluationResult, rung: number): Promise<{ content: unknown; generator: string }> {
-  const q = getQuestion(db, questionId);
+  const q = (await getQuestion(db, questionId));
   const priorities = r.top_priorities.map((p) => r.comments.find((c) => c.id === p.comment_id)!).filter(Boolean);
   const weak = r.comments.filter((c) => c.kind !== "strength");
   if (rung === 0) {
@@ -128,7 +124,7 @@ async function generateRung(db: DB, userId: string, attemptId: string, questionI
     for (const part of r.question_demand_analysis.parts.filter((p) => p.addressed !== "fully")) {
       sections.push({ heading: `Part: ${part.demand}`, prompts: ["What are 2–3 distinct points here?", "For each, what is the mechanism and one piece of evidence?"] });
     }
-    const directives = directivesFor(db, q.directive_codes);
+    const directives = (await directivesFor(db, q.directive_codes));
     for (const d of r.question_demand_analysis.directive_compliance.filter((x) => !x.met)) {
       const dir = directives.find((x) => x.code === d.directive);
       sections.push({ heading: `Directive: ${dir?.label ?? d.directive}`, prompts: (dir?.expected_moves ?? []).map((m) => `Where in your answer do you do this: ${m.replace(/_/g, " ")}?`) });
@@ -145,7 +141,7 @@ async function generateRung(db: DB, userId: string, attemptId: string, questionI
   }
   if (rung === 3) {
     const query = `${q.text} ${q.parts.map((p) => p.demand).join(" ")}`;
-    const items = retrieveForQuestion(db, q.id, query, 4, 0.6).map((s) => ({ title: s.title, url: s.url, text: s.text, text_kind: s.text_kind, verification_status: s.verification_status, published_on: s.published_on }));
+    const items = (await retrieveForQuestion(db, q.id, query, 4, 0.6)).map((s) => ({ title: s.title, url: s.url, text: s.text, text_kind: s.text_kind, verification_status: s.verification_status, published_on: s.published_on }));
     return { generator: "retrieval", content: { items } };
   }
   // Rungs 4–5 need a model; never fabricate in demo mode.
@@ -156,8 +152,8 @@ async function generateRung(db: DB, userId: string, attemptId: string, questionI
       content: { unavailable: true, message: "Exemplars and sample answers need an AI provider (set ANTHROPIC_API_KEY). The diagnosis, hints, outline and dossier above are available without one." },
     };
   }
-  assertSpendCapNotReached(db);
-  const tr = latestTranscript(db, attemptId);
+  (await assertSpendCapNotReached(db));
+  const tr = (await latestTranscript(db, attemptId));
   const nonce = Math.random().toString(16).slice(2, 10);
   const weakest = [...r.criteria].sort((a, b) => a.band / a.max_band - b.band / b.max_band)[0];
   const schema = z.object({ text: z.string().min(20).max(rung === 4 ? 1200 : 4000), notes: z.array(z.string().max(200)).max(4) });
@@ -187,7 +183,7 @@ async function generateRung(db: DB, userId: string, attemptId: string, questionI
     maxTokens: rung === 4 ? 600 : 1800,
     temperature: 0.4,
   });
-  recordCost(db, { userId, operation: rung === 4 ? "exemplar" : "sample_answer", provider: provider.name, model: res.model, usage: res.usage });
+  (await recordCost(db, { userId, operation: rung === 4 ? "exemplar" : "sample_answer", provider: provider.name, model: res.model, usage: res.usage }));
   const banned = findBanned(res.output.text);
   return {
     generator: `${provider.name}:${res.model}`,

@@ -22,7 +22,6 @@ DROP TABLE IF EXISTS calibration_reports;
 DROP TABLE IF EXISTS rubrics;
 DROP TABLE IF EXISTS qotd;
 DROP TABLE IF EXISTS question_sources;
-DROP TABLE IF EXISTS source_chunks_fts;
 DROP TABLE IF EXISTS source_chunks;
 DROP TABLE IF EXISTS sources;
 DROP TABLE IF EXISTS questions;

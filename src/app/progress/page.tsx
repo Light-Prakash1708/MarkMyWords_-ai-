@@ -20,9 +20,9 @@ const STATUS_TONE: Record<string, string> = {
 export default async function Progress() {
   const user = await currentUser();
   if (!user) redirect("/login");
-  const db = getDb();
-  const p = getProgress(db, user.id);
-  const w = weeklyReport(db, user.id);
+  const db = (await getDb());
+  const p = (await getProgress(db, user.id));
+  const w = (await weeklyReport(db, user.id));
   const fmtDate = (s: string) => new Date(s).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
   const scorePts = p.timeline.map((t) => ({ x: fmtDate(t.created_at), y: t.pct * 100, label: `${t.paper_code} · ${t.attempt_kind.replace("_", " ")} · ${t.score.toFixed(1)}/${t.max}${t.provider === "heuristic" ? " (demo evaluator)" : ""}`, hollow: t.attempt_kind === "rewrite" }));
   const gapPts = p.timeline.filter((t) => t.self_gap !== null).map((t) => ({ x: fmtDate(t.created_at), y: t.self_gap as number, label: `${t.paper_code}: average gap between your self-check and the estimate` }));

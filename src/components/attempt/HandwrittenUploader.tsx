@@ -12,6 +12,38 @@ interface Upload {
   quality: { verdict: string; problems: string[] } | null;
 }
 
+const MAX_SIDE = 2400;
+const SHRINK_ABOVE_BYTES = 1.5 * 1024 * 1024;
+
+/**
+ * Phone photos are often 5–12 MB. Downscale large JPEG/PNG/WebP photos in the browser (longest
+ * side 2400 px is plenty for handwriting) so uploads stay fast and under hosting body limits.
+ * The server still validates and re-encodes everything; this is only a size optimisation.
+ */
+async function shrinkPhoto(f: File): Promise<File> {
+  if (!/^image\/(jpeg|png|webp)$/.test(f.type) || typeof createImageBitmap !== "function") return f;
+  try {
+    const bmp = await createImageBitmap(f, { imageOrientation: "from-image" });
+    const scale = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
+    if (scale === 1 && f.size <= SHRINK_ABOVE_BYTES) {
+      bmp.close();
+      return f;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bmp.width * scale);
+    canvas.height = Math.round(bmp.height * scale);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return f;
+    ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    bmp.close();
+    const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/jpeg", 0.85));
+    if (!blob || blob.size >= f.size) return f;
+    return new File([blob], f.name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" });
+  } catch {
+    return f;
+  }
+}
+
 export function HandwrittenUploader({ attemptId, uploads, startedAt }: { attemptId: string; uploads: Upload[]; startedAt: string }) {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
@@ -22,9 +54,11 @@ export function HandwrittenUploader({ attemptId, uploads, startedAt }: { attempt
   async function send(files: FileList | File[]) {
     setErrors([]);
     for (const f of Array.from(files)) {
+      setBusy(`Preparing ${f.name}…`);
+      const file = await shrinkPhoto(f);
       setBusy(`Checking ${f.name}…`);
       const form = new FormData();
-      form.append("file", f);
+      form.append("file", file);
       try {
         await api(`/api/attempts/${attemptId}/uploads`, { form });
       } catch (e) {

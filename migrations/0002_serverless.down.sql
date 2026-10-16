@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS app_meta;
+ALTER TABLE uploads DROP COLUMN data;

@@ -24,19 +24,19 @@ describe("passwords and sessions", async () => {
     expect(passwordProblem("short")).not.toBeNull();
     expect(passwordProblem("a perfectly fine phrase")).toBeNull();
   });
-  const { db } = freshDb();
+  const { db } = (await freshDb());
   it("stores only token hashes and can destroy sessions", async () => {
     const u = await makeUser(db);
-    const { token } = createSession(db, u.id);
-    expect(db.prepare("SELECT 1 FROM sessions WHERE token_hash = ?").get(token)).toBeUndefined();
-    expect(userForToken(db, token)?.id).toBe(u.id);
-    destroySession(db, token);
-    expect(userForToken(db, token)).toBeNull();
+    const { token } = (await createSession(db, u.id));
+    expect((await db.get("SELECT 1 FROM sessions WHERE token_hash = ?", token))).toBeUndefined();
+    expect((await userForToken(db, token))?.id).toBe(u.id);
+    (await destroySession(db, token));
+    expect(await userForToken(db, token)).toBeNull();
   });
-  it("rate limits within a window", () => {
-    for (let i = 0; i < 3; i++) rateLimit(db, "t:key", 3, 60, 1_000_000);
-    expect(() => rateLimit(db, "t:key", 3, 60, 1_000_000)).toThrow(/Too many/);
-    expect(() => rateLimit(db, "t:key", 3, 60, 1_000_000 + 61_000)).not.toThrow();
+  it("rate limits within a window", async () => {
+    for (let i = 0; i < 3; i++) (await rateLimit(db, "t:key", 3, 60, 1_000_000));
+    await expect((async () => rateLimit(db, "t:key", 3, 60, 1_000_000))()).rejects.toThrow(/Too many/);
+    await rateLimit(db, "t:key", 3, 60, 1_000_000 + 61_000); // new window: allowed
   });
 });
 
@@ -82,12 +82,12 @@ describe("upload validation", () => {
     const heic = Buffer.concat([Buffer.from([0, 0, 0, 24]), Buffer.from("ftypheic"), Buffer.alloc(32)]);
     await expect(validateUpload(heic, 0)).rejects.toThrow(/HEIC/);
   });
-  it("screens PDFs for active content, encryption and truncation", () => {
+  it("screens PDFs for active content, encryption and truncation", async () => {
     expect(screenPdf(pdf("")).pageCount).toBe(1);
     expect(() => screenPdf(pdf("4 0 obj << /S /JavaScript /JS (app.alert(1)) >> endobj"))).toThrow(/JavaScript/);
-    expect(() => screenPdf(pdf("<< /Encrypt 5 0 R >>"))).toThrow(/Encrypted/);
-    expect(() => screenPdf(pdf("<< /EmbeddedFile 6 0 R >>"))).toThrow(/embedded/);
-    expect(() => screenPdf(Buffer.from("%PDF-1.4\n/Type /Page\n"))).toThrow(/truncated/);
+    await expect((async () => screenPdf(pdf("<< /Encrypt 5 0 R >>")))()).rejects.toThrow(/Encrypted/);
+    await expect((async () => screenPdf(pdf("<< /EmbeddedFile 6 0 R >>")))()).rejects.toThrow(/embedded/);
+    await expect((async () => screenPdf(Buffer.from("%PDF-1.4\n/Type /Page\n")))()).rejects.toThrow(/truncated/);
   });
   it("enforces the page limit", async () => {
     await expect(validateUpload(await page(), 12)).rejects.toThrow(/at most/);

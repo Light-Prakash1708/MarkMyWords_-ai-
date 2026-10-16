@@ -20,10 +20,10 @@ describe("exam configuration", () => {
     expect(inactive.length).toBeGreaterThanOrEqual(1);
     for (const c of inactive) expect(c.exam.input_modes).toEqual(["typed"]);
   });
-  it("rejects an invalid exam config", () => {
+  it("rejects an invalid exam config", async () => {
     const dir = tempDir();
     fs.writeFileSync(path.join(dir, "bad.yaml"), "exam:\n  code: bad code\n");
-    expect(() => loadExamConfigs(dir)).toThrow(/Invalid exam config/);
+    await expect((async () => loadExamConfigs(dir))()).rejects.toThrow(/Invalid exam config/);
   });
   it("rubric weights sum to 1 and every criterion has max_band+1 bands", () => {
     for (const r of loadRubricTemplates()) {

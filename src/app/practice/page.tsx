@@ -12,11 +12,11 @@ export default async function Practice({ searchParams }: { searchParams: Promise
   const user = await currentUser();
   if (!user) redirect("/login");
   const sp = await searchParams;
-  const db = getDb();
-  const papers = paperSummaries(db, user.target_exam_code).filter((p) => p.exam_status === "active");
+  const db = (await getDb());
+  const papers = (await paperSummaries(db, user.target_exam_code)).filter((p) => p.exam_status === "active");
   const paper = papers.find((p) => p.code === sp.paper)?.code;
-  const questions = listQuestions(db, { examCode: user.target_exam_code, paperCode: paper });
-  const attempted = new Set((db.prepare("SELECT DISTINCT question_id FROM attempts WHERE user_id = ?").all(user.id) as { question_id: string }[]).map((r) => r.question_id));
+  const questions = (await listQuestions(db, { examCode: user.target_exam_code, paperCode: paper }));
+  const attempted = new Set(((await db.all("SELECT DISTINCT question_id FROM attempts WHERE user_id = ?", user.id)) as { question_id: string }[]).map((r) => r.question_id));
   const current = papers.find((p) => p.code === paper);
   return (
     <div className="page container">

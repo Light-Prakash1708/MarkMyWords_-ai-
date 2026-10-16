@@ -179,7 +179,6 @@ CREATE TABLE source_chunks (
   UNIQUE (source_id, ordinal)
 );
 
-CREATE VIRTUAL TABLE source_chunks_fts USING fts5(chunk_id UNINDEXED, text, tokenize = 'porter unicode61');
 
 CREATE TABLE question_sources (
   question_id TEXT NOT NULL REFERENCES questions(id) ON DELETE CASCADE,

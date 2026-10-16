@@ -18,7 +18,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   if (user.role === "student") redirect("/today");
   const sp = await searchParams;
   const tab = (TABS as readonly string[]).includes(sp.tab ?? "") ? (sp.tab as (typeof TABS)[number]) : "review";
-  const db = getDb();
+  const db = (await getDb());
   return (
     <div className="page container">
       <span className="ink-label">Review desk · {user.role}</span>
@@ -29,7 +29,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
 
       {tab === "review" && (
         <div className="stack">
-          {reviewQueue(db).map((q) => (
+          {(await reviewQueue(db)).map((q) => (
             <div key={q.id} className="card flat">
               <div className="row between"><span className="label">{q.paper_code} · {q.question_type_code} · {q.origin}</span><ReviewBadge status={q.review_status} /></div>
               <p style={{ fontWeight: 650 }}>{q.text}</p>
@@ -42,12 +42,12 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         </div>
       )}
 
-      {tab === "qotd" && (() => {
-        const papers = paperSummaries(db, null).filter((p) => p.exam_status === "active");
+      {tab === "qotd" && (await (async () => {
+        const papers = (await paperSummaries(db, null)).filter((p) => p.exam_status === "active");
         const examCode = papers[0]?.exam_code ?? "";
-        const approved = reviewQueue(db).filter((q) => q.review_status === "approved").map((q) => ({ id: q.id, text: q.text }));
-        const sources = listSources(db).map((s) => ({ id: s.id, title: s.title }));
-        const upcoming = db.prepare("SELECT q.date, qu.text FROM qotd q JOIN questions qu ON qu.id = q.question_id ORDER BY q.date DESC LIMIT 14").all() as { date: string; text: string }[];
+        const approved = (await reviewQueue(db)).filter((q) => q.review_status === "approved").map((q) => ({ id: q.id, text: q.text }));
+        const sources = (await listSources(db)).map((s) => ({ id: s.id, title: s.title }));
+        const upcoming = (await db.all("SELECT q.date, qu.text FROM qotd q JOIN questions qu ON qu.id = q.question_id ORDER BY q.date DESC LIMIT 14")) as { date: string; text: string }[];
         return (
           <div className="stack">
             <section className="card"><h2 className="h3">Schedule the question of the day</h2><QotdForm examCode={examCode} options={approved} /></section>
@@ -55,18 +55,18 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
             <section className="card"><h2 className="h3">Scheduled</h2><ul className="small">{upcoming.map((u) => <li key={u.date}><span className="mono">{u.date}</span> — {u.text.slice(0, 100)}</li>)}</ul>{!upcoming.length && <p className="small muted">Nothing scheduled — a deterministic pick is used each day.</p>}</section>
           </div>
         );
-      })()}
+      })())}
 
       {tab === "disputes" && (
         <div className="stack">
-          {listDisputes(db).map((d) => (
+          {(await listDisputes(db)).map((d) => (
             <div key={d.id} className="card flat">
               <div className="row between"><span className="label">{d.student_name} · comment {d.comment_id ?? "(overall)"} · {new Date(d.created_at).toLocaleString("en-IN")}</span><span className={`chip ${d.status === "open" ? "butter" : "mint"}`}>{d.status}</span></div>
               <p>{d.reason}</p>
               {d.status === "open" ? <DisputeResolver id={d.id} /> : <p className="small muted">{d.resolution}</p>}
             </div>
           ))}
-          {!listDisputes(db).length && <p className="muted">No disputes.</p>}
+          {!(await listDisputes(db)).length && <p className="muted">No disputes.</p>}
         </div>
       )}
 
@@ -74,7 +74,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <div className="table-wrap">
           <table className="t">
             <thead><tr><th>Source</th><th>Kind</th><th>Status</th><th></th></tr></thead>
-            <tbody>{listSources(db).map((s) => (
+            <tbody>{(await listSources(db)).map((s) => (
               <tr key={s.id}><td><a href={s.url} target="_blank" rel="noreferrer noopener">{s.title}</a><div className="tiny muted">{s.publisher}</div></td><td className="small">{s.text_kind}</td><td><span className={`chip ${s.verification_status === "verified" ? "mint" : "butter"}`}>{s.verification_status}</span></td><td><VerifySource id={s.id} verified={s.verification_status === "verified"} /></td></tr>
             ))}</tbody>
           </table>
@@ -85,14 +85,14 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <div className="stack">
           <p className="small muted">A rubric version can be activated only with a calibration report covering at least 50 human-reviewed answers. Active versions are immutable; changes require a new version.</p>
           <div className="table-wrap"><table className="t"><thead><tr><th>Rubric</th><th>Version</th><th>Status</th><th>Calibration</th><th></th></tr></thead>
-            <tbody>{listRubricVersions(db).map((r) => (
+            <tbody>{(await listRubricVersions(db)).map((r) => (
               <tr key={r.id}><td className="mono small">{r.code}</td><td className="mono">{r.version}</td><td>{r.status}</td><td className="small">{r.calibration_report_id ? `${r.human_cases} human-reviewed cases` : "none attached"}</td><td>{r.status !== "active" && <ActivateRubric id={r.id} />}</td></tr>
             ))}</tbody></table></div>
         </div>
       )}
 
-      {tab === "costs" && (() => {
-        const c = costDashboard(db);
+      {tab === "costs" && (await (async () => {
+        const c = (await costDashboard(db));
         return (
           <div className="stack">
             <dl className="spec">
@@ -107,11 +107,11 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
             <p className="small">Disputes: {c.disputes.map((d) => `${d.n} ${d.status}`).join(", ") || "none"}</p>
           </div>
         );
-      })()}
+      })())}
 
       {tab === "audit" && (
         <div className="table-wrap"><table className="t"><thead><tr><th>When</th><th>Who</th><th>Action</th><th>Target</th><th>Reason</th></tr></thead>
-          <tbody>{auditLog(db).map((a) => <tr key={a.id}><td className="mono small">{new Date(a.created_at).toLocaleString("en-IN")}</td><td>{a.actor_name ?? "—"}</td><td>{a.action}</td><td className="small">{a.target_type} {a.target_id?.slice(0, 8)}</td><td className="small">{a.reason}</td></tr>)}</tbody></table></div>
+          <tbody>{(await auditLog(db)).map((a) => <tr key={a.id}><td className="mono small">{new Date(a.created_at).toLocaleString("en-IN")}</td><td>{a.actor_name ?? "—"}</td><td>{a.action}</td><td className="small">{a.target_type} {a.target_id?.slice(0, 8)}</td><td className="small">{a.reason}</td></tr>)}</tbody></table></div>
       )}
     </div>
   );
