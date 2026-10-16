@@ -1,0 +1,22 @@
+# Skill-tag taxonomy v1 — the vocabulary the error ledger and recommender use.
+skills:
+  - { code: DEMAND.parts_missed, name: "Addressing every part of the question", group: DEMAND }
+  - { code: DEMAND.directive_misread, name: "Doing what the directive asks", group: DEMAND }
+  - { code: CONTENT.dimension_gap, name: "Covering the relevant dimensions", group: CONTENT }
+  - { code: CONTENT.irrelevance, name: "Staying relevant", group: CONTENT }
+  - { code: ANALYSIS.mechanism_missing, name: "Explaining mechanisms (how and why)", group: ANALYSIS }
+  - { code: ANALYSIS.no_judgement, name: "Reaching a reasoned judgement", group: ANALYSIS }
+  - { code: ANALYSIS.one_sided, name: "Weighing both sides", group: ANALYSIS }
+  - { code: EVIDENCE.unsupported_claim, name: "Backing claims with evidence", group: EVIDENCE }
+  - { code: EVIDENCE.factual_error, name: "Factual accuracy", group: EVIDENCE }
+  - { code: EVIDENCE.outdated_data, name: "Using current data", group: EVIDENCE }
+  - { code: EVIDENCE.no_examples, name: "Using concrete examples", group: EVIDENCE }
+  - { code: STRUCTURE.weak_intro, name: "Framing introductions", group: STRUCTURE }
+  - { code: STRUCTURE.weak_conclusion, name: "Concluding with synthesis", group: STRUCTURE }
+  - { code: STRUCTURE.poor_flow, name: "Logical flow", group: STRUCTURE }
+  - { code: PRESENTATION.no_visuals, name: "Using diagrams and visual structure", group: PRESENTATION }
+  - { code: PRESENTATION.legibility, name: "Legibility", group: PRESENTATION }
+  - { code: LANGUAGE.verbosity, name: "Concise expression", group: LANGUAGE }
+  - { code: LANGUAGE.imprecise_terms, name: "Precise terminology", group: LANGUAGE }
+  - { code: TIME.over_limit, name: "Staying within the word limit", group: TIME }
+  - { code: TIME.incomplete, name: "Completing the answer", group: TIME }

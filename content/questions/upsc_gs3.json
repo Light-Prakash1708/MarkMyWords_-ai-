@@ -1,0 +1,159 @@
+{
+  "exam_code": "UPSC_CSE",
+  "paper_code": "GS3",
+  "note": "Original practice questions written for MarkMyWords. None is a previous-year question. All start as pending_human until a reviewer approves them.",
+  "questions": [
+    {
+      "slug": "gs3-monetary-transmission",
+      "question_type": "GS_15M",
+      "text": "Changes in the policy repo rate do not always translate quickly into lending rates. Examine the reasons for weak monetary policy transmission in India and the measures taken to improve it.",
+      "parts": [
+        { "id": "p1", "demand": "Reasons for weak transmission (mechanism)", "cues": ["deposit", "repricing", "liquidity", "small savings", "cost of funds", "npa", "mclr"] },
+        { "id": "p2", "demand": "Measures taken to improve transmission", "cues": ["external benchmark", "eblr", "mclr", "liquidity", "measure"] }
+      ],
+      "directive_codes": ["EXAMINE"],
+      "syllabus_codes": ["GS3.FISCAL_MONETARY"],
+      "dimensions_expected": ["economic", "governance"],
+      "priority_reasons": ["Core syllabus item: monetary policy", "Same issue examined differently in RBI Grade B ESI — useful cross-exam skill"],
+      "skill_tags_targeted": ["ANALYSIS.mechanism_missing", "EVIDENCE.no_examples"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-monetary-framework"] }
+    },
+    {
+      "slug": "gs3-inflation-targeting",
+      "question_type": "GS_10M",
+      "text": "Evaluate the flexible inflation targeting framework adopted by India.",
+      "parts": [
+        { "id": "p1", "demand": "What the framework is (target, band, MPC)", "cues": ["4", "tolerance", "monetary policy committee", "mpc", "cpi", "target"] },
+        { "id": "p2", "demand": "Assessment — achievements, criticisms, judgement", "cues": ["credibility", "growth", "supply", "food inflation", "however", "overall"] }
+      ],
+      "directive_codes": ["EVALUATE"],
+      "syllabus_codes": ["GS3.FISCAL_MONETARY"],
+      "dimensions_expected": ["economic", "governance"],
+      "priority_reasons": ["Core syllabus item: monetary policy", "Tests accurate use of figures"],
+      "skill_tags_targeted": ["EVIDENCE.factual_error", "ANALYSIS.no_judgement"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": ["summary-monetary-framework"] }
+    },
+    {
+      "slug": "gs3-gst-cooperative-federalism",
+      "question_type": "GS_15M",
+      "text": "Discuss how the Goods and Services Tax has reshaped cooperative fiscal federalism in India. What issues remain unresolved?",
+      "parts": [
+        { "id": "p1", "demand": "How GST reshaped cooperative fiscal federalism", "cues": ["gst council", "279a", "pooled sovereignty", "one nation", "cooperative"] },
+        { "id": "p2", "demand": "Unresolved issues", "cues": ["compensation", "petroleum", "voting", "rate", "fiscal autonomy", "issue"] }
+      ],
+      "directive_codes": ["DISCUSS"],
+      "syllabus_codes": ["GS3.FISCAL_MONETARY", "GS3.ECONOMY"],
+      "dimensions_expected": ["economic", "constitutional", "governance"],
+      "priority_reasons": ["Core syllabus item: government budgeting and taxation", "Connects GS-III economy with GS-II federalism"],
+      "skill_tags_targeted": ["EVIDENCE.factual_error", "CONTENT.dimension_gap"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-gst"] }
+    },
+    {
+      "slug": "gs3-msp-reform",
+      "question_type": "GS_15M",
+      "text": "Critically analyse the role of Minimum Support Prices in Indian agriculture, with reference to cropping patterns, fiscal costs and farmer incomes.",
+      "parts": [
+        { "id": "p1", "demand": "Effects on cropping patterns", "cues": ["cropping pattern", "wheat", "paddy", "rice", "groundwater", "diversification"] },
+        { "id": "p2", "demand": "Fiscal costs", "cues": ["fiscal", "procurement", "subsidy", "fci", "storage"] },
+        { "id": "p3", "demand": "Farmer incomes and an overall judgement", "cues": ["income", "price risk", "awareness", "coverage", "overall", "however"] }
+      ],
+      "directive_codes": ["CRITICALLY_ANALYSE"],
+      "syllabus_codes": ["GS3.AGRICULTURE"],
+      "dimensions_expected": ["economic", "environmental", "social"],
+      "priority_reasons": ["Core syllabus item: MSP, subsidies and procurement"],
+      "skill_tags_targeted": ["ANALYSIS.one_sided", "DEMAND.parts_missed"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": ["summary-msp"] }
+    },
+    {
+      "slug": "gs3-post-harvest-loss",
+      "question_type": "GS_10M",
+      "text": "Post-harvest losses reduce farmer incomes and food availability. Examine the role of cold-chain infrastructure and technology in reducing them.",
+      "parts": [
+        { "id": "p1", "demand": "Nature and impact of post-harvest loss", "cues": ["perishable", "loss", "wastage", "income", "food availability"] },
+        { "id": "p2", "demand": "Role of cold chain and technology", "cues": ["cold chain", "cold storage", "logistics", "technology", "pack-house", "reefer"] }
+      ],
+      "directive_codes": ["EXAMINE"],
+      "syllabus_codes": ["GS3.AGRICULTURE", "GS3.INFRA_INVEST"],
+      "dimensions_expected": ["economic", "technological", "social"],
+      "priority_reasons": ["Core syllabus item: food processing and supply chain management"],
+      "skill_tags_targeted": ["ANALYSIS.mechanism_missing", "EVIDENCE.no_examples"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": [] }
+    },
+    {
+      "slug": "gs3-upi-dpi",
+      "question_type": "GS_10M",
+      "text": "Discuss how digital public infrastructure such as UPI has influenced financial inclusion in India, and identify the risks it creates.",
+      "parts": [
+        { "id": "p1", "demand": "Influence on financial inclusion", "cues": ["upi", "inclusion", "small merchants", "digital payment", "credit history"] },
+        { "id": "p2", "demand": "Risks", "cues": ["fraud", "cyber", "concentration", "outage", "privacy", "risk"] }
+      ],
+      "directive_codes": ["DISCUSS"],
+      "syllabus_codes": ["GS3.SCI_TECH", "GS3.ECONOMY"],
+      "dimensions_expected": ["technological", "economic", "security"],
+      "priority_reasons": ["Core syllabus item: IT and its applications", "Links to cyber security"],
+      "skill_tags_targeted": ["DEMAND.parts_missed", "EVIDENCE.no_examples"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-upi"] }
+    },
+    {
+      "slug": "gs3-ndc-climate",
+      "question_type": "GS_15M",
+      "text": "Examine India's updated climate commitments under the Paris Agreement. How can India balance them with its development needs?",
+      "parts": [
+        { "id": "p1", "demand": "India's updated commitments", "cues": ["ndc", "45", "50", "2070", "net zero", "emissions intensity", "non-fossil"] },
+        { "id": "p2", "demand": "Balancing with development needs", "cues": ["development", "just transition", "finance", "coal", "employment", "balance"] }
+      ],
+      "directive_codes": ["EXAMINE"],
+      "syllabus_codes": ["GS3.ENVIRONMENT"],
+      "dimensions_expected": ["environmental", "economic", "international", "social"],
+      "priority_reasons": ["Core syllabus item: conservation and climate change", "Tests accurate use of targets"],
+      "skill_tags_targeted": ["EVIDENCE.factual_error", "ANALYSIS.one_sided"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-india-ndc"] }
+    },
+    {
+      "slug": "gs3-disaster-management",
+      "question_type": "GS_10M",
+      "text": "Discuss the institutional framework for disaster management in India and the shift from a relief-centric to a risk-reduction approach.",
+      "parts": [
+        { "id": "p1", "demand": "Institutional framework", "cues": ["ndma", "sdma", "ddma", "disaster management act", "ndrf", "2005"] },
+        { "id": "p2", "demand": "Shift towards risk reduction", "cues": ["sendai", "preparedness", "mitigation", "risk reduction", "early warning"] }
+      ],
+      "directive_codes": ["DISCUSS"],
+      "syllabus_codes": ["GS3.DISASTER"],
+      "dimensions_expected": ["governance", "environmental", "social"],
+      "priority_reasons": ["Core syllabus item: disaster management"],
+      "skill_tags_targeted": ["EVIDENCE.factual_error", "STRUCTURE.weak_intro"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-dm-act"] }
+    },
+    {
+      "slug": "gs3-cyber-security",
+      "question_type": "GS_15M",
+      "text": "With the expansion of digital public services, cyber security has become a governance challenge. Critically analyse India's preparedness and suggest measures.",
+      "parts": [
+        { "id": "p1", "demand": "Nature of the challenge", "cues": ["ransomware", "critical infrastructure", "data breach", "attack", "threat"] },
+        { "id": "p2", "demand": "Assessment of preparedness", "cues": ["cert-in", "policy", "capacity", "skill", "coordination", "however"] },
+        { "id": "p3", "demand": "Measures", "cues": ["should", "measure", "audit", "way forward", "framework"] }
+      ],
+      "directive_codes": ["CRITICALLY_ANALYSE"],
+      "syllabus_codes": ["GS3.SECURITY", "GS3.SCI_TECH"],
+      "dimensions_expected": ["security", "technological", "governance"],
+      "priority_reasons": ["Core syllabus item: basics of cyber security"],
+      "skill_tags_targeted": ["ANALYSIS.no_judgement", "EVIDENCE.unsupported_claim"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": [] }
+    },
+    {
+      "slug": "gs3-employment-growth",
+      "question_type": "GS_15M",
+      "text": "Why has economic growth in India not generated proportionate formal employment? Discuss with reference to the structure of the economy and suggest policy responses.",
+      "parts": [
+        { "id": "p1", "demand": "Reasons linked to economic structure", "cues": ["informal", "manufacturing", "agriculture", "services", "capital-intensive", "structure"] },
+        { "id": "p2", "demand": "Policy responses", "cues": ["msme", "labour-intensive", "skill", "should", "policy"] }
+      ],
+      "directive_codes": ["DISCUSS"],
+      "syllabus_codes": ["GS3.ECONOMY"],
+      "dimensions_expected": ["economic", "social"],
+      "priority_reasons": ["Core syllabus item: growth, development and employment"],
+      "skill_tags_targeted": ["ANALYSIS.mechanism_missing", "EVIDENCE.no_examples"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": ["summary-mgnrega"] }
+    }
+  ]
+}

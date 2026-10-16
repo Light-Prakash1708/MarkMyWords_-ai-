@@ -1,0 +1,49 @@
+{
+  "name": "markmywords",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MarkMyWords — an exam-specific AI answer-writing coach for UPSC CSE Mains (GS-II, GS-III), architected for RBI Grade B.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "setup": "tsx scripts/setup.ts",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "sources:ingest": "tsx scripts/ingest-sources.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "bench": "tsx benchmarks/run.ts",
+    "lint:copy": "vitest run tests/unit/copy-lint.test.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource-variable/jetbrains-mono": "5.3.0",
+    "@fontsource-variable/literata": "5.3.0",
+    "@fontsource/instrument-serif": "5.3.0",
+    "better-sqlite3": "12.11.1",
+    "next": "16.4.2",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "sharp": "0.35.5",
+    "yaml": "2.9.1",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "22.18.6",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2",
+    "vite": "7.3.7",
+    "vitest": "5.0.5"
+  }
+}

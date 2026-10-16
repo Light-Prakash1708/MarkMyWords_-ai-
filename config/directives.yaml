@@ -1,0 +1,30 @@
+# Directive words: what each one demands. Used by both evaluators and the outline rung of the hint ladder.
+directives:
+  - code: DISCUSS
+    label: Discuss
+    demand: Examine the issue from several angles, giving reasons and implications.
+    expected_moves: [multiple_points, reasons, implications]
+  - code: EXAMINE
+    label: Examine
+    demand: Probe the issue in depth — causes, implications and the evidence behind them.
+    expected_moves: [causes, implications, evidence]
+  - code: CRITICALLY_ANALYSE
+    label: Critically analyse
+    demand: Break the issue into parts, weigh arguments for and against, and reach a reasoned judgement.
+    expected_moves: [arguments_for, arguments_against, judgement]
+  - code: EVALUATE
+    label: Evaluate
+    demand: Assess value or effectiveness against criteria and reach a judgement.
+    expected_moves: [criteria, assessment, judgement]
+  - code: COMMENT
+    label: Comment
+    demand: Give a reasoned opinion supported by evidence.
+    expected_moves: [opinion, reasons]
+  - code: ELUCIDATE
+    label: Elucidate
+    demand: Explain clearly, with examples, so that the concept is easy to understand.
+    expected_moves: [explanation, examples]
+  - code: ANALYSE
+    label: Analyse
+    demand: Break the issue into its components and explain how they relate.
+    expected_moves: [components, relationships]

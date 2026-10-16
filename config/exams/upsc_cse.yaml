@@ -1,0 +1,64 @@
+# MarkMyWords exam configuration — UPSC CSE Mains (GS-II, GS-III)
+# Every exam fact carries a source and a verification status. "secondary" means it was
+# checked against a reputable secondary source but NOT yet against the official UPSC notice.
+exam:
+  code: UPSC_CSE
+  name: UPSC Civil Services Examination — Mains
+  short_name: UPSC CSE
+  status: active
+  config_version: 1.0.0
+  input_modes: [handwritten, typed]
+  default_input_mode: handwritten
+  ux:
+    show_handwriting_upload: true
+    show_presentation_feedback: true
+    show_typing_speed: false
+    editor_style: ruled_sheet
+papers:
+  - code: GS2
+    name: General Studies Paper II
+    subtitle: Governance, Constitution, Polity, Social Justice & International Relations
+    total_marks: 250
+    duration_min: 180
+    default_input_mode: handwritten
+    fact_source_url: https://visionias.in/blog/essay/upsc-mains-2025-download-gs-and-essay-paper-pdf-in-depth-analysis
+    official_reference_url: https://upsc.gov.in/examinations/previous-question-papers
+    verified_on: 2026-10-16
+    verification_status: secondary
+    question_types:
+      - { code: GS_10M, marks: 10, word_limit: 150, time_budget_min: 7, word_tolerance_pct: 15 }
+      - { code: GS_15M, marks: 15, word_limit: 250, time_budget_min: 11, word_tolerance_pct: 15 }
+    syllabus:
+      - { code: GS2.POLITY, title: "Indian Constitution — features, amendments, basic structure", micro_topics: [historical underpinnings, amendments, basic structure, significant provisions] }
+      - { code: GS2.FEDERALISM, title: "Functions and responsibilities of the Union and States; federal structure", micro_topics: [centre-state relations, devolution of powers and finances, local bodies] }
+      - { code: GS2.SEPARATION, title: "Separation of powers, dispute redressal mechanisms and institutions", micro_topics: [legislature, executive, judiciary, tribunals] }
+      - { code: GS2.PARLIAMENT, title: "Parliament and State legislatures — structure, functioning, conduct of business", micro_topics: [privileges, committees, conduct of business] }
+      - { code: GS2.CONST_BODIES, title: "Constitutional and statutory bodies", micro_topics: [Election Commission, Finance Commission, CAG, regulatory bodies] }
+      - { code: GS2.GOVERNANCE, title: "Governance, transparency and accountability; e-governance; citizens charters", micro_topics: [RTI, e-governance, civil services role, accountability institutions] }
+      - { code: GS2.WELFARE, title: "Welfare schemes for vulnerable sections and their performance", micro_topics: [schemes, mechanisms, laws, institutions] }
+      - { code: GS2.SOCIAL_SECTOR, title: "Health, education and human resources; poverty and hunger", micro_topics: [health, education, poverty, hunger, social sector services] }
+      - { code: GS2.IR, title: "India and its neighbourhood; bilateral, regional and global groupings", micro_topics: [neighbourhood, groupings, agreements affecting India, diaspora, international institutions] }
+    status: active
+  - code: GS3
+    name: General Studies Paper III
+    subtitle: Economy, Agriculture, Science & Technology, Environment, Security & Disaster Management
+    total_marks: 250
+    duration_min: 180
+    default_input_mode: handwritten
+    fact_source_url: https://visionias.in/blog/essay/upsc-mains-2025-download-gs-and-essay-paper-pdf-in-depth-analysis
+    official_reference_url: https://upsc.gov.in/examinations/previous-question-papers
+    verified_on: 2026-10-16
+    verification_status: secondary
+    question_types:
+      - { code: GS_10M, marks: 10, word_limit: 150, time_budget_min: 7, word_tolerance_pct: 15 }
+      - { code: GS_15M, marks: 15, word_limit: 250, time_budget_min: 11, word_tolerance_pct: 15 }
+    syllabus:
+      - { code: GS3.ECONOMY, title: "Indian economy — planning, resource mobilisation, growth, development and employment", micro_topics: [growth, employment, inclusive growth, budgeting] }
+      - { code: GS3.FISCAL_MONETARY, title: "Government budgeting; monetary and fiscal policy", micro_topics: [fiscal policy, monetary policy, inflation, taxation] }
+      - { code: GS3.AGRICULTURE, title: "Agriculture — cropping patterns, farm subsidies, MSP, PDS, food processing", micro_topics: [MSP, subsidies, PDS, food security, supply chains] }
+      - { code: GS3.INFRA_INVEST, title: "Infrastructure and investment models", micro_topics: [energy, ports, roads, PPP] }
+      - { code: GS3.SCI_TECH, title: "Science and technology — developments, applications, indigenisation", micro_topics: [IT, space, biotechnology, IPR, digital public infrastructure] }
+      - { code: GS3.ENVIRONMENT, title: "Conservation, environmental pollution and degradation, EIA", micro_topics: [climate change, pollution, biodiversity, EIA] }
+      - { code: GS3.DISASTER, title: "Disaster and disaster management", micro_topics: [preparedness, mitigation, institutions] }
+      - { code: GS3.SECURITY, title: "Internal security — challenges, cyber security, border management", micro_topics: [extremism, cyber security, money laundering, border management] }
+    status: active

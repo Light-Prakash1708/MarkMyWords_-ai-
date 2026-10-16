@@ -1,0 +1,455 @@
+{
+  "note": "Seed source corpus for MarkMyWords. 'verbatim' entries reproduce public constitutional text; 'our_summary' entries are summaries written by MarkMyWords. EVERY entry is verification_status=unverified until a reviewer checks it against the official document at official_url (homepage-level links: the exact deep link must be added during verification). Citations shown to students always display this status.",
+  "sources": [
+    {
+      "slug": "const-art-14",
+      "kind": "constitution",
+      "text_kind": "verbatim",
+      "title": "Constitution of India — Article 14",
+      "publisher": "Government of India (Legislative Department)",
+      "official_url": "https://legislative.gov.in/constitution-of-india/",
+      "published_on": "1950-01-26",
+      "license": "public_govt",
+      "stale_after_days": null,
+      "chunks": [
+        "Article 14. Equality before law. The State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India."
+      ]
+    },
+    {
+      "slug": "const-art-21",
+      "kind": "constitution",
+      "text_kind": "verbatim",
+      "title": "Constitution of India — Article 21",
+      "publisher": "Government of India (Legislative Department)",
+      "official_url": "https://legislative.gov.in/constitution-of-india/",
+      "published_on": "1950-01-26",
+      "license": "public_govt",
+      "stale_after_days": null,
+      "chunks": [
+        "Article 21. Protection of life and personal liberty. No person shall be deprived of his life or personal liberty except according to procedure established by law."
+      ]
+    },
+    {
+      "slug": "const-art-21a",
+      "kind": "constitution",
+      "text_kind": "verbatim",
+      "title": "Constitution of India — Article 21A",
+      "publisher": "Government of India (Legislative Department)",
+      "official_url": "https://legislative.gov.in/constitution-of-india/",
+      "published_on": "2002-12-12",
+      "license": "public_govt",
+      "stale_after_days": null,
+      "chunks": [
+        "Article 21A. Right to education. The State shall provide free and compulsory education to all children of the age of six to fourteen years in such manner as the State may, by law, determine."
+      ]
+    },
+    {
+      "slug": "const-art-280",
+      "kind": "constitution",
+      "text_kind": "verbatim",
+      "title": "Constitution of India — Article 280(1)",
+      "publisher": "Government of India (Legislative Department)",
+      "official_url": "https://legislative.gov.in/constitution-of-india/",
+      "published_on": "1950-01-26",
+      "license": "public_govt",
+      "stale_after_days": null,
+      "chunks": [
+        "Article 280(1). The President shall, within two years from the commencement of this Constitution and thereafter at the expiration of every fifth year or at such earlier time as the President considers necessary, by order constitute a Finance Commission which shall consist of a Chairman and four other members to be appointed by the President."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "fc-article",
+          "claim_pattern": "Finance Commission[^.]{0,80}?Article\\s*(\\d{3}[A-Z]?)|Article\\s*(\\d{3}[A-Z]?)[^.]{0,80}?Finance Commission",
+          "expected_pattern": "^280$",
+          "quote": "constitute a Finance Commission which shall consist of a Chairman and four other members",
+          "note": "The Finance Commission is constituted under Article 280."
+        }
+      ]
+    },
+    {
+      "slug": "const-art-324",
+      "kind": "constitution",
+      "text_kind": "verbatim",
+      "title": "Constitution of India — Article 324(1)",
+      "publisher": "Government of India (Legislative Department)",
+      "official_url": "https://legislative.gov.in/constitution-of-india/",
+      "published_on": "1950-01-26",
+      "license": "public_govt",
+      "stale_after_days": null,
+      "chunks": [
+        "Article 324(1). The superintendence, direction and control of the preparation of the electoral rolls for, and the conduct of, all elections to Parliament and to the Legislature of every State and of elections to the offices of President and Vice-President held under this Constitution shall be vested in a Commission (referred to in this Constitution as the Election Commission)."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "ec-article",
+          "claim_pattern": "Election Commission[^.]{0,80}?Article\\s*(\\d{3}[A-Z]?)|Article\\s*(\\d{3}[A-Z]?)[^.]{0,80}?Election Commission",
+          "expected_pattern": "^324$",
+          "quote": "shall be vested in a Commission (referred to in this Constitution as the Election Commission)",
+          "note": "The Election Commission is established under Article 324."
+        }
+      ]
+    },
+    {
+      "slug": "const-art-48a",
+      "kind": "constitution",
+      "text_kind": "verbatim",
+      "title": "Constitution of India — Article 48A",
+      "publisher": "Government of India (Legislative Department)",
+      "official_url": "https://legislative.gov.in/constitution-of-india/",
+      "published_on": "1977-01-03",
+      "license": "public_govt",
+      "stale_after_days": null,
+      "chunks": [
+        "Article 48A. Protection and improvement of environment and safeguarding of forests and wild life. The State shall endeavour to protect and improve the environment and to safeguard the forests and wild life of the country."
+      ]
+    },
+    {
+      "slug": "summary-fiscal-federalism",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Finance Commission and fiscal imbalances",
+      "publisher": "MarkMyWords (summary of constitutional provisions and Finance Commission practice)",
+      "official_url": "https://fincomindia.nic.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "Vertical fiscal imbalance arises because the Union raises a larger share of revenue while States bear a large share of expenditure responsibilities. The Finance Commission recommends the share of States in the divisible pool of central taxes to narrow this gap.",
+        "Horizontal imbalance refers to differences in fiscal capacity among States. The Finance Commission distributes the States' share among them using a formula with criteria such as population, area, income distance and other indicators chosen by each Commission.",
+        "States have raised concerns that cesses and surcharges are outside the divisible pool, which reduces the effective share of central revenue devolved to them, and that some criteria can penalise States that have controlled population growth."
+      ]
+    },
+    {
+      "slug": "summary-bommai",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — S.R. Bommai v. Union of India (1994)",
+      "publisher": "MarkMyWords (summary of Supreme Court judgment)",
+      "official_url": "https://www.sci.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": null,
+      "chunks": [
+        "In S.R. Bommai v. Union of India (1994), the Supreme Court held that a proclamation under Article 356 is subject to judicial review, that the majority of a government should be tested on the floor of the House, and that secularism is part of the basic structure of the Constitution."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "bommai-year",
+          "claim_pattern": "Bommai\\b.{0,60}?\\b(19\\d{2}|20\\d{2})\\b",
+          "expected_pattern": "^1994$",
+          "quote": "In S.R. Bommai v. Union of India (1994), the Supreme Court held",
+          "note": "The Bommai judgment was delivered in 1994."
+        }
+      ]
+    },
+    {
+      "slug": "summary-sarkaria-punchhi",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Sarkaria and Punchhi Commissions",
+      "publisher": "MarkMyWords (summary of commission reports)",
+      "official_url": "https://www.mha.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": null,
+      "chunks": [
+        "The Sarkaria Commission (set up in 1983) and the Punchhi Commission (set up in 2007) examined Centre-State relations. Both recommended that Article 356 be used sparingly, only as a last resort after other options are exhausted."
+      ]
+    },
+    {
+      "slug": "summary-rti-act",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Right to Information Act, 2005",
+      "publisher": "MarkMyWords (summary of statute)",
+      "official_url": "https://rti.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "The Right to Information Act, 2005 gives citizens a legal right to request information from public authorities, sets time limits for responses, and creates Information Commissions at the Central and State levels to hear appeals and complaints."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "rti-year",
+          "claim_pattern": "(?:Right to Information|RTI) Act,?\\s*(?:of\\s*)?((?:19|20)\\d{2})",
+          "expected_pattern": "^2005$",
+          "quote": "The Right to Information Act, 2005 gives citizens a legal right",
+          "note": "The RTI Act was enacted in 2005."
+        }
+      ]
+    },
+    {
+      "slug": "summary-73-74-amendments",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — 73rd and 74th Constitutional Amendments",
+      "publisher": "MarkMyWords (summary of constitutional amendments)",
+      "official_url": "https://legislative.gov.in/constitution-of-india/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": null,
+      "chunks": [
+        "The 73rd and 74th Constitutional Amendments of 1992 gave constitutional status to panchayats and municipalities, provided for regular elections, reservation of seats, State Election Commissions and State Finance Commissions, and listed subjects in the Eleventh and Twelfth Schedules that States may devolve."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "amend-73-year",
+          "claim_pattern": "73rd[^.]{0,80}?\\b(19\\d{2})\\b",
+          "expected_pattern": "^1992$",
+          "quote": "The 73rd and 74th Constitutional Amendments of 1992 gave constitutional status",
+          "note": "The 73rd and 74th Amendments were passed in 1992."
+        }
+      ]
+    },
+    {
+      "slug": "summary-puttaswamy",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — K.S. Puttaswamy v. Union of India (2017)",
+      "publisher": "MarkMyWords (summary of Supreme Court judgment)",
+      "official_url": "https://www.sci.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": null,
+      "chunks": [
+        "In K.S. Puttaswamy v. Union of India (2017), a nine-judge bench of the Supreme Court recognised the right to privacy as a fundamental right protected as part of the right to life and personal liberty under Article 21, and indicated that limits on privacy must satisfy legality, legitimate aim and proportionality."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "puttaswamy-year",
+          "claim_pattern": "Puttaswamy[^.]{0,60}?\\b((?:19|20)\\d{2})\\b",
+          "expected_pattern": "^2017$",
+          "quote": "In K.S. Puttaswamy v. Union of India (2017), a nine-judge bench",
+          "note": "The privacy judgment was delivered in 2017."
+        }
+      ]
+    },
+    {
+      "slug": "summary-dpdp-act",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Digital Personal Data Protection Act, 2023",
+      "publisher": "MarkMyWords (summary of statute)",
+      "official_url": "https://www.meity.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 365,
+      "chunks": [
+        "The Digital Personal Data Protection Act, 2023 governs the processing of digital personal data, requires a lawful basis such as consent for processing, sets obligations for data fiduciaries and establishes a Data Protection Board."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "dpdp-year",
+          "claim_pattern": "Digital Personal Data Protection Act,?\\s*((?:19|20)\\d{2})",
+          "expected_pattern": "^2023$",
+          "quote": "The Digital Personal Data Protection Act, 2023 governs the processing",
+          "note": "The DPDP Act was enacted in 2023."
+        }
+      ]
+    },
+    {
+      "slug": "summary-nfsa",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — National Food Security Act, 2013",
+      "publisher": "MarkMyWords (summary of statute)",
+      "official_url": "https://dfpd.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "The National Food Security Act, 2013 made access to subsidised foodgrains a legal entitlement. It covers up to 75 per cent of the rural population and up to 50 per cent of the urban population under the Targeted Public Distribution System."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "nfsa-rural",
+          "claim_pattern": "(\\d{2})\\s*(?:%|per ?cent)\\s*(?:of\\s*(?:the\\s*)?)?rural",
+          "context_pattern": "NFSA|Food Security|PDS|Public Distribution",
+          "expected_pattern": "^75$",
+          "quote": "It covers up to 75 per cent of the rural population",
+          "note": "NFSA covers up to 75% of the rural population."
+        },
+        {
+          "id": "nfsa-urban",
+          "claim_pattern": "(\\d{2})\\s*(?:%|per ?cent)\\s*(?:of\\s*(?:the\\s*)?)?urban",
+          "context_pattern": "NFSA|Food Security|PDS|Public Distribution",
+          "expected_pattern": "^50$",
+          "quote": "up to 50 per cent of the urban population",
+          "note": "NFSA covers up to 50% of the urban population."
+        }
+      ]
+    },
+    {
+      "slug": "summary-monetary-framework",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Flexible inflation targeting and transmission",
+      "publisher": "MarkMyWords (summary of RBI Act provisions and RBI practice)",
+      "official_url": "https://www.rbi.org.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 365,
+      "chunks": [
+        "Under the amended RBI Act, 1934, the Central Government sets the inflation target in consultation with the RBI, and a six-member Monetary Policy Committee decides the policy repo rate. The target notified for 2016-2021 and retained for 2021-2026 was 4 per cent CPI inflation with a tolerance band of 2 to 6 per cent. Check the current notification, as the target is reviewed every five years.",
+        "Monetary transmission can be slow because banks' cost of funds depends on deposit rates that reprice only as deposits mature, because rates on small savings schemes compete with bank deposits, and because stressed balance sheets and liquidity conditions affect how banks pass on rate changes.",
+        "To improve transmission, the RBI moved from the base rate to the marginal cost of funds based lending rate (MCLR) in 2016 and required banks to link certain new floating-rate loans to an external benchmark such as the policy repo rate from October 2019."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "inflation-target",
+          "claim_pattern": "inflation target[^.]{0,40}?(\\d+(?:\\.\\d+)?)\\s*(?:%|per ?cent)|target(?:ed)?[^.]{0,20}?(?:CPI\\s*)?inflation[^.]{0,20}?of\\s*(\\d+(?:\\.\\d+)?)\\s*(?:%|per ?cent)",
+          "expected_pattern": "^4$",
+          "quote": "4 per cent CPI inflation with a tolerance band of 2 to 6 per cent",
+          "note": "The notified target has been 4% CPI inflation (±2%). Verify the target currently in force."
+        }
+      ]
+    },
+    {
+      "slug": "summary-gst",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Goods and Services Tax",
+      "publisher": "MarkMyWords (summary of constitutional amendment and GST practice)",
+      "official_url": "https://gstcouncil.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "The Goods and Services Tax was enabled by the Constitution (One Hundred and First Amendment) Act, 2016 and rolled out on 1 July 2017. Article 279A created the GST Council, chaired by the Union Finance Minister with State Finance Ministers as members, which recommends rates and rules. States were promised compensation for revenue shortfalls for five years."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "gst-rollout-year",
+          "claim_pattern": "GST[^.]{0,50}?(?:rolled out|implemented|came into (?:force|effect)|launched)\\s+(?:on|in|from)\\s+(?:1\\s*July\\s*,?\\s*|July\\s*1\\s*,?\\s*)?((?:19|20)\\d{2})",
+          "exclude_pattern": "Amendment",
+          "expected_pattern": "^2017$",
+          "quote": "rolled out on 1 July 2017",
+          "note": "GST was rolled out on 1 July 2017 (the enabling amendment was passed in 2016)."
+        },
+        {
+          "id": "gst-council-article",
+          "claim_pattern": "GST Council[^.]{0,60}?Article\\s*(\\d{3}[A-Z]?)|Article\\s*(\\d{3}[A-Z]?)[^.]{0,60}?GST Council",
+          "expected_pattern": "^279A$",
+          "quote": "Article 279A created the GST Council",
+          "note": "The GST Council is constituted under Article 279A."
+        }
+      ]
+    },
+    {
+      "slug": "summary-msp",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Minimum Support Prices",
+      "publisher": "MarkMyWords (summary of policy practice)",
+      "official_url": "https://agriwelfare.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "Minimum Support Prices are announced by the Government on the recommendation of the Commission for Agricultural Costs and Prices. Effective procurement has historically been concentrated in rice and wheat in a few States, which has encouraged these crops over pulses and oilseeds and added to groundwater stress in some regions."
+      ]
+    },
+    {
+      "slug": "summary-upi",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Unified Payments Interface",
+      "publisher": "MarkMyWords (summary)",
+      "official_url": "https://www.npci.org.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 365,
+      "chunks": [
+        "The Unified Payments Interface (UPI), operated by the National Payments Corporation of India, was launched in 2016. It enables real-time interoperable payments between bank accounts using a mobile phone and has lowered the cost of accepting digital payments for small merchants."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "upi-year",
+          "claim_pattern": "UPI[^.]{0,60}?(?:launched|introduced)[^.]{0,30}?\\b((?:19|20)\\d{2})\\b",
+          "expected_pattern": "^2016$",
+          "quote": "was launched in 2016",
+          "note": "UPI was launched in 2016."
+        }
+      ]
+    },
+    {
+      "slug": "summary-india-ndc",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — India's updated NDC (2022)",
+      "publisher": "MarkMyWords (summary of India's NDC submission)",
+      "official_url": "https://unfccc.int/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "In its updated Nationally Determined Contribution of 2022, India committed to reduce the emissions intensity of its GDP by 45 per cent by 2030 from the 2005 level and to achieve about 50 per cent of cumulative electric power installed capacity from non-fossil fuel sources by 2030. India has announced a goal of net zero emissions by 2070."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "ndc-intensity",
+          "claim_pattern": "emissions? intensity[^.]{0,80}?(\\d{2})\\s*(?:%|per ?cent)",
+          "expected_pattern": "^45$",
+          "quote": "reduce the emissions intensity of its GDP by 45 per cent by 2030 from the 2005 level",
+          "note": "The updated NDC targets a 45% cut in emissions intensity of GDP by 2030 over 2005."
+        },
+        {
+          "id": "net-zero-year",
+          "claim_pattern": "net[- ]zero[^.]{0,40}?\\b(20\\d{2})\\b",
+          "expected_pattern": "^2070$",
+          "quote": "India has announced a goal of net zero emissions by 2070",
+          "note": "India's announced net-zero year is 2070."
+        }
+      ]
+    },
+    {
+      "slug": "summary-dm-act",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Disaster Management Act, 2005",
+      "publisher": "MarkMyWords (summary of statute)",
+      "official_url": "https://ndma.gov.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "The Disaster Management Act, 2005 created the National Disaster Management Authority, chaired by the Prime Minister, along with State and District Disaster Management Authorities, and provided for the National Disaster Response Force.",
+        "The Sendai Framework for Disaster Risk Reduction 2015-2030 emphasises understanding risk, strengthening risk governance, investing in resilience and improving preparedness, marking a shift from response to risk reduction."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "dm-act-year",
+          "claim_pattern": "Disaster Management Act,?\\s*(?:of\\s*)?((?:19|20)\\d{2})",
+          "expected_pattern": "^2005$",
+          "quote": "The Disaster Management Act, 2005 created the National Disaster Management Authority",
+          "note": "The Disaster Management Act was enacted in 2005."
+        }
+      ]
+    },
+    {
+      "slug": "summary-mgnrega",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — MGNREGA",
+      "publisher": "MarkMyWords (summary of statute)",
+      "official_url": "https://nrega.nic.in/",
+      "published_on": "2026-10-16",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "The Mahatma Gandhi National Rural Employment Guarantee Act, 2005 provides a legal guarantee of at least 100 days of wage employment in a financial year to every rural household whose adult members volunteer to do unskilled manual work."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "mgnrega-days",
+          "claim_pattern": "(\\d{2,3})\\s*days[^.]{0,60}?(?:employment|work)",
+          "context_pattern": "MGNREGA|NREGA|Rural Employment Guarantee",
+          "expected_pattern": "^100$",
+          "quote": "at least 100 days of wage employment in a financial year",
+          "note": "MGNREGA guarantees at least 100 days of wage employment per rural household per financial year."
+        }
+      ]
+    }
+  ]
+}

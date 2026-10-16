@@ -1,0 +1,168 @@
+{
+  "generated_at": "2026-10-16T07:10:09.443Z",
+  "provider": "heuristic",
+  "samples": 1,
+  "dataset": {
+    "base_answers": 8,
+    "review_status": "pending_human (AI-drafted; not expert-reviewed)"
+  },
+  "suites": [
+    {
+      "name": "consistency",
+      "status": "pass",
+      "target": "SD of total ≤ 0.5 marks over repeats; ≥ 80% identical top-3 priority sets",
+      "measured": {
+        "max_sd": 0,
+        "stable_priorities_pct": 100,
+        "repeats": 5,
+        "answers": 8
+      },
+      "summary": "max SD 0.00; 100% stable priorities",
+      "notes": [
+        "The rule-based evaluator is deterministic, so this suite is trivially satisfied; it is meaningful for the AI evaluator."
+      ]
+    },
+    {
+      "name": "invariance",
+      "status": "pass",
+      "target": "Whitespace/formatting perturbation changes total by ≤ 0.5",
+      "measured": {
+        "max_delta": 0,
+        "cases": 8
+      },
+      "summary": "max Δ 0.00 over 8 cases"
+    },
+    {
+      "name": "sensitivity",
+      "status": "fail",
+      "target": "Removing a required part or the conclusion is penalised in the expected criterion in ≥ 90% of cases",
+      "measured": {
+        "part_removed_detected": "6/8",
+        "conclusion_removed_detected": "8/8",
+        "rate": 87.5
+      },
+      "summary": "88% detected"
+    },
+    {
+      "name": "factual_accuracy",
+      "status": "pass",
+      "target": "Planted checkable errors detected with a citation ≥ 85%; false-correction rate ≤ 3%",
+      "measured": {
+        "detected": "6/6",
+        "recall_pct": 100,
+        "false_corrections": "0/8"
+      },
+      "summary": "recall 100%, false corrections 0/8",
+      "notes": [
+        "Planted errors are limited to facts covered by the seed corpus's deterministic checks; uncovered facts are not checked in demo mode."
+      ]
+    },
+    {
+      "name": "injection",
+      "status": "pass",
+      "target": "100% of injection attempts leave the score within +0.5",
+      "measured": {
+        "resisted": "24/24"
+      },
+      "summary": "24/24 resisted"
+    },
+    {
+      "name": "evidence_validity",
+      "status": "pass",
+      "target": "100% of evidence quotes match the answer exactly",
+      "measured": {
+        "spans": 354,
+        "mismatched": 0
+      },
+      "summary": "354/354 exact"
+    },
+    {
+      "name": "citation_structure",
+      "status": "pass",
+      "target": "100% of citations are exact substrings of retrieved sources",
+      "measured": {
+        "citations": 6,
+        "invalid": 0
+      },
+      "summary": "6/6 valid"
+    },
+    {
+      "name": "citation_support",
+      "status": "not_measured",
+      "target": "≥ 95% of citations judged to support the claim",
+      "measured": {},
+      "summary": "needs human (or LLM-judge) review of claim–quote pairs"
+    },
+    {
+      "name": "p2_no_answer_writing",
+      "status": "pass",
+      "target": "0 suggestions that read like answer prose",
+      "measured": {
+        "suggestions": 294,
+        "flagged": 0
+      },
+      "summary": "0 flagged of 294"
+    },
+    {
+      "name": "strict_validator",
+      "status": "pass",
+      "target": "0 post-repair validator violations",
+      "measured": {
+        "runs": 94,
+        "violations": 0
+      },
+      "summary": "0 violations in 94 runs"
+    },
+    {
+      "name": "genericity",
+      "status": "info",
+      "target": "Below a threshold set from the expert baseline (not yet available)",
+      "measured": {
+        "mean_cross_answer_similarity": 0.116,
+        "messages_referencing_own_words_pct": 80.6
+      },
+      "summary": "mean similarity 0.12; 81% of span-anchored comments quote the student's own words"
+    },
+    {
+      "name": "expert_agreement",
+      "status": "not_measured",
+      "target": "QWK ≥ 0.6 and ≥ 90% of human–human QWK; total MAE ≤ 1.5 on 15-mark questions",
+      "measured": {
+        "human_reviewed_cases": 0,
+        "pending_cases": 8
+      },
+      "summary": "0 human-reviewed cases — accuracy cannot be claimed yet"
+    },
+    {
+      "name": "style_neutrality",
+      "status": "not_measured",
+      "target": "No penalty for valid alternative structures (expert-rated pairs)",
+      "measured": {},
+      "summary": "needs expert-rated structure pairs"
+    },
+    {
+      "name": "ocr_silent_guess",
+      "status": "info",
+      "target": "Silent-guess rate ≤ 1% of tokens on a real handwriting set",
+      "measured": {
+        "synthetic_silent_guess_pct": 0,
+        "uncertain_spans_preserved": 1
+      },
+      "summary": "harness verified on a synthetic fixture only — no real handwriting dataset yet"
+    },
+    {
+      "name": "cost_latency",
+      "status": "info",
+      "target": "Report P50/P95; budgets set with the owner",
+      "measured": {
+        "evaluations": 126,
+        "p50_ms": 1,
+        "p95_ms": 2,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "est_cost_inr": 0
+      },
+      "summary": "P50 1 ms, P95 2 ms"
+    }
+  ]
+}

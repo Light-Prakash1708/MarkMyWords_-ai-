@@ -1,0 +1,285 @@
+{
+  "note": "Base answers DRAFTED BY AN AI ASSISTANT for benchmark scaffolding. review_status=pending_human: they are NOT expert-reviewed and MUST NOT be used to report accuracy. Variants (removed parts, injected errors, injection attempts, perturbations) are generated from these by benchmarks/generate-cases.ts. The 'draft_expected' fields are relative expectations used for sensitivity checks only.",
+  "answers": [
+    {
+      "id": "b01",
+      "question_slug": "gs3-monetary-transmission",
+      "tier": "strong",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "Monetary policy transmission is the process by which a change in the policy repo rate passes through to deposit and lending rates, and from there to spending and inflation. In India this pass-through has often been slow and partial."
+        },
+        {
+          "role": "part:p1",
+          "text": "First, banks fund themselves mainly through fixed-rate term deposits that reprice only as they mature, so their cost of funds falls with a lag after a rate cut. Second, administered rates on small savings schemes compete with bank deposits, which limits how far banks can cut deposit rates without losing funds. Third, stressed balance sheets lead banks to protect margins, so they pass on cuts to borrowers slowly. Finally, when liquidity in the banking system is tight, changes in the repo rate have a weaker effect on market rates."
+        },
+        {
+          "role": "part:p2",
+          "text": "To improve transmission, the RBI replaced the base rate with the marginal cost of funds based lending rate (MCLR) in 2016, which links lending rates more closely to current funding costs. From October 2019 it required banks to link certain new floating-rate loans, such as home loans, to an external benchmark like the repo rate, which transmits changes to borrowers directly. Managing liquidity to keep it in surplus has also helped rates move faster."
+        },
+        {
+          "role": "conclusion",
+          "text": "However, existing loans and deposits still adjust slowly. Therefore, aligning small savings rates with market rates and deepening the corporate bond market are the way forward for faster and fuller transmission."
+        }
+      ],
+      "factual_substitutions": [
+        {
+          "find": "in 2016, which links",
+          "replace": "in 2012, which links",
+          "check_id": null
+        }
+      ],
+      "pattern_error": {
+        "append_to": "part:p2",
+        "sentence": "GST was rolled out in 2016, which also affected prices."
+      },
+      "draft_expected": {
+        "band_min": {
+          "ANALYSIS": 3,
+          "DEMAND": 3
+        }
+      }
+    },
+    {
+      "id": "b02",
+      "question_slug": "gs3-monetary-transmission",
+      "tier": "weak",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "Monetary policy is very important for the economy of India in today's world."
+        },
+        {
+          "role": "part:p1",
+          "text": "Transmission is weak in India. Banks do not reduce rates. Lending rates are always high and this is bad for growth."
+        },
+        {
+          "role": "conclusion",
+          "text": "The government should take steps."
+        }
+      ],
+      "factual_substitutions": [],
+      "draft_expected": {
+        "band_max": {
+          "ANALYSIS": 2,
+          "EVIDENCE": 2
+        }
+      }
+    },
+    {
+      "id": "b03",
+      "question_slug": "gs3-gst-cooperative-federalism",
+      "tier": "average",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "The Goods and Services Tax replaced a web of Central and State indirect taxes with a single destination-based tax. GST was rolled out on 1 July 2017. The enabling constitutional change was made a year earlier."
+        },
+        {
+          "role": "part:p1",
+          "text": "GST reshaped cooperative federalism because the Centre and the States now share the power to tax goods and services. Article 279A created the GST Council, where the Union Finance Minister and State Finance Ministers decide rates together. This pooled sovereignty means decisions are negotiated rather than imposed, which leads to a more cooperative style of fiscal federalism."
+        },
+        {
+          "role": "part:p2",
+          "text": "However, several issues remain unresolved. States gave up independent taxing power and depend on compensation, which ended after five years. Petroleum products remain outside GST, so cascading continues in an important sector. Voting rules in the Council give the Centre a significant say, and some States feel their fiscal autonomy has reduced."
+        },
+        {
+          "role": "conclusion",
+          "text": "Overall, GST has strengthened institutional cooperation, but a stable revenue framework for States and broader coverage are needed to complete the reform."
+        }
+      ],
+      "factual_substitutions": [
+        {
+          "find": "GST was rolled out on 1 July 2017.",
+          "replace": "GST was rolled out on 1 July 2018.",
+          "check_id": "gst-rollout-year"
+        }
+      ],
+      "draft_expected": {
+        "band_min": {
+          "DEMAND": 3
+        }
+      }
+    },
+    {
+      "id": "b04",
+      "question_slug": "gs2-rti-accountability",
+      "tier": "average",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "The Right to Information Act, 2005 gives citizens a legal right to seek information from public authorities, making transparency a citizen's entitlement rather than a government favour."
+        },
+        {
+          "role": "part:p1",
+          "text": "RTI enables accountability because citizens can ask how decisions were taken and how public money was spent. Information on ration distribution, road works and welfare payments has exposed irregularities, which leads officials to keep better records since they know they may have to disclose them."
+        },
+        {
+          "role": "part:p2",
+          "text": "However, its effectiveness is limited. Information Commissions face large pendency and vacancies, so appeals take a long time. Wide exemptions are sometimes used to deny information, and applicants have faced harassment. Many public authorities still do not proactively disclose information."
+        },
+        {
+          "role": "conclusion",
+          "text": "Overall, the Act has been effective in changing the culture of secrecy, but timely appeals, filled vacancies and proactive disclosure are needed for it to deliver accountability consistently."
+        }
+      ],
+      "factual_substitutions": [
+        {
+          "find": "Right to Information Act, 2005 gives",
+          "replace": "Right to Information Act, 2009 gives",
+          "check_id": "rti-year"
+        }
+      ],
+      "draft_expected": {
+        "band_min": {
+          "DEMAND": 3
+        }
+      }
+    },
+    {
+      "id": "b05",
+      "question_slug": "gs2-art356-federalism",
+      "tier": "strong",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "Article 356 allows President's Rule in a State when its government cannot be carried on in accordance with the Constitution. Its frequent use in the past made judicial interpretation central to protecting federalism."
+        },
+        {
+          "role": "part:p1",
+          "text": "In S.R. Bommai v. Union of India (1994), the Supreme Court held that a proclamation under Article 356 is subject to judicial review and that a government's majority must be tested on the floor of the House, not in the Governor's chamber. This shifted the burden onto the Centre to justify the use of the power with relevant material."
+        },
+        {
+          "role": "part:p2",
+          "text": "However, concerns remain. Courts usually review a proclamation after it is issued, so a State government may already have been dismissed. The Governor's report still plays a decisive role, and its subjectivity has been criticised. The Sarkaria and Punchhi Commissions recommended using the provision only as a last resort."
+        },
+        {
+          "role": "conclusion",
+          "text": "Thus, judicial interpretation has made Article 356 harder to misuse, but codifying the Governor's role and time-bound review would strengthen this safeguard further."
+        }
+      ],
+      "factual_substitutions": [
+        {
+          "find": "Bommai v. Union of India (1994)",
+          "replace": "Bommai v. Union of India (1989)",
+          "check_id": "bommai-year"
+        }
+      ],
+      "draft_expected": {
+        "band_min": {
+          "ANALYSIS": 3
+        }
+      }
+    },
+    {
+      "id": "b06",
+      "question_slug": "gs3-ndc-climate",
+      "tier": "average",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "Under the Paris Agreement, India updated its Nationally Determined Contribution in 2022, balancing climate ambition with its development needs."
+        },
+        {
+          "role": "part:p1",
+          "text": "India committed to reduce the emissions intensity of its GDP by 45 per cent by 2030 from the 2005 level and to source about 50 per cent of installed electricity capacity from non-fossil sources by 2030. It has also announced a net zero goal for 2070."
+        },
+        {
+          "role": "part:p2",
+          "text": "Balancing these goals with development requires a just transition for coal-dependent regions, because jobs and State revenues depend on coal. Access to climate finance and technology at low cost matters, since renewable expansion needs large upfront investment. Energy demand will keep rising as incomes grow, so efficiency and storage are essential."
+        },
+        {
+          "role": "conclusion",
+          "text": "Therefore, India's path should combine renewable expansion with social protection for affected workers and stronger international finance commitments."
+        }
+      ],
+      "factual_substitutions": [
+        {
+          "find": "net zero goal for 2070",
+          "replace": "net zero goal for 2050",
+          "check_id": "net-zero-year"
+        }
+      ],
+      "draft_expected": {
+        "band_min": {
+          "DEMAND": 3
+        }
+      }
+    },
+    {
+      "id": "b07",
+      "question_slug": "gs2-nfsa-pds",
+      "tier": "weak",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "Food security is a big issue. The National Food Security Act, 2013 is a very good law."
+        },
+        {
+          "role": "part:p1",
+          "text": "It gives food to all the poor people in the country and it covers 75 per cent of the rural population."
+        },
+        {
+          "role": "conclusion",
+          "text": "PDS has many problems like corruption. These must be removed."
+        }
+      ],
+      "factual_substitutions": [
+        {
+          "find": "covers 75 per cent of the rural",
+          "replace": "covers 90 per cent of the rural",
+          "check_id": "nfsa-rural"
+        }
+      ],
+      "draft_expected": {
+        "band_max": {
+          "ANALYSIS": 2
+        }
+      }
+    },
+    {
+      "id": "b08",
+      "question_slug": "gs3-disaster-management",
+      "tier": "average",
+      "review_status": "pending_human",
+      "paragraphs": [
+        {
+          "role": "intro",
+          "text": "India faces floods, cyclones, droughts and earthquakes, and its approach to disasters has shifted from relief after the event to reducing risk before it."
+        },
+        {
+          "role": "part:p1",
+          "text": "The Disaster Management Act, 2005 created the National Disaster Management Authority, chaired by the Prime Minister, along with State and District authorities. The National Disaster Response Force provides specialised response capacity."
+        },
+        {
+          "role": "part:p2",
+          "text": "The shift to risk reduction is visible in early warning systems and evacuation planning, which have reduced cyclone deaths in States like Odisha. Aligning with the Sendai Framework, planning now emphasises preparedness, risk-informed infrastructure and community awareness, because preventing losses costs less than responding to them."
+        },
+        {
+          "role": "conclusion",
+          "text": "Going forward, urban flooding and heatwaves need the same risk-reduction focus, with stronger local capacity and funding for mitigation."
+        }
+      ],
+      "factual_substitutions": [
+        {
+          "find": "Disaster Management Act, 2005 created",
+          "replace": "Disaster Management Act, 2010 created",
+          "check_id": "dm-act-year"
+        }
+      ],
+      "draft_expected": {
+        "band_min": {
+          "DEMAND": 3
+        }
+      }
+    }
+  ]
+}

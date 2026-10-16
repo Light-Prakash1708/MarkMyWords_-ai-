@@ -1,0 +1,160 @@
+{
+  "exam_code": "UPSC_CSE",
+  "paper_code": "GS2",
+  "note": "Original practice questions written for MarkMyWords. None is a previous-year question. All start as pending_human until a reviewer approves them.",
+  "questions": [
+    {
+      "slug": "gs2-fiscal-federalism-fc",
+      "question_type": "GS_15M",
+      "text": "The Finance Commission is often described as the balancing wheel of Indian fiscal federalism. Examine its role in addressing vertical and horizontal imbalances, and discuss the concerns States have raised about the devolution process.",
+      "parts": [
+        { "id": "p1", "demand": "Role in addressing vertical imbalance (Centre vs States)", "cues": ["vertical", "divisible pool", "share of states", "centre and states", "tax devolution"] },
+        { "id": "p2", "demand": "Role in addressing horizontal imbalance (among States)", "cues": ["horizontal", "criteria", "population", "income distance", "among states", "formula"] },
+        { "id": "p3", "demand": "Concerns of States about devolution", "cues": ["cess", "surcharge", "concern", "grievance", "penalis", "terms of reference"] }
+      ],
+      "directive_codes": ["EXAMINE", "DISCUSS"],
+      "syllabus_codes": ["GS2.FEDERALISM", "GS2.CONST_BODIES"],
+      "dimensions_expected": ["constitutional", "economic", "governance"],
+      "priority_reasons": ["Core syllabus item: devolution of finances to States", "Connects GS-II federalism with GS-III fiscal policy"],
+      "skill_tags_targeted": ["ANALYSIS.mechanism_missing", "DEMAND.parts_missed", "EVIDENCE.no_examples"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["const-art-280", "summary-fiscal-federalism"] }
+    },
+    {
+      "slug": "gs2-art356-federalism",
+      "question_type": "GS_10M",
+      "text": "Critically analyse how judicial interpretation has shaped the use of Article 356 in India.",
+      "parts": [
+        { "id": "p1", "demand": "How courts have interpreted and limited Article 356", "cues": ["bommai", "judicial review", "floor test", "court", "supreme court"] },
+        { "id": "p2", "demand": "Assessment of remaining concerns and a judgement", "cues": ["misuse", "however", "concern", "governor", "way forward"] }
+      ],
+      "directive_codes": ["CRITICALLY_ANALYSE"],
+      "syllabus_codes": ["GS2.FEDERALISM", "GS2.SEPARATION"],
+      "dimensions_expected": ["constitutional", "legal", "governance"],
+      "priority_reasons": ["Core syllabus item: federal structure and emergency provisions", "Tests use of case law as evidence"],
+      "skill_tags_targeted": ["ANALYSIS.one_sided", "ANALYSIS.no_judgement", "EVIDENCE.unsupported_claim"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": ["summary-bommai", "summary-sarkaria-punchhi"] }
+    },
+    {
+      "slug": "gs2-rti-accountability",
+      "question_type": "GS_10M",
+      "text": "Evaluate the effectiveness of the Right to Information Act, 2005 as a tool of accountability in governance.",
+      "parts": [
+        { "id": "p1", "demand": "How RTI enables accountability", "cues": ["transparency", "information", "citizen", "public authority", "accountab"] },
+        { "id": "p2", "demand": "Limitations and an overall judgement", "cues": ["pendency", "vacanc", "exemption", "limitation", "however", "overall"] }
+      ],
+      "directive_codes": ["EVALUATE"],
+      "syllabus_codes": ["GS2.GOVERNANCE"],
+      "dimensions_expected": ["governance", "legal", "social"],
+      "priority_reasons": ["Core syllabus item: transparency and accountability", "Evaluative directive — practises reaching a judgement"],
+      "skill_tags_targeted": ["ANALYSIS.no_judgement", "EVIDENCE.no_examples"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-rti-act"] }
+    },
+    {
+      "slug": "gs2-local-bodies-73-74",
+      "question_type": "GS_15M",
+      "text": "Three decades after the 73rd and 74th Constitutional Amendments, local bodies in India remain dependent on higher levels of government. Discuss the reasons for this and suggest measures to strengthen their functional and financial autonomy.",
+      "parts": [
+        { "id": "p1", "demand": "Reasons for continued dependence", "cues": ["funds", "functions", "functionaries", "devolution", "state finance commission", "capacity"] },
+        { "id": "p2", "demand": "Measures to strengthen autonomy", "cues": ["property tax", "own revenue", "measure", "should", "strengthen", "capacity building"] }
+      ],
+      "directive_codes": ["DISCUSS"],
+      "syllabus_codes": ["GS2.FEDERALISM", "GS2.GOVERNANCE"],
+      "dimensions_expected": ["constitutional", "economic", "governance", "social"],
+      "priority_reasons": ["Core syllabus item: devolution of powers and finances up to local levels"],
+      "skill_tags_targeted": ["CONTENT.dimension_gap", "EVIDENCE.no_examples", "STRUCTURE.weak_conclusion"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-73-74-amendments"] }
+    },
+    {
+      "slug": "gs2-ec-independence",
+      "question_type": "GS_10M",
+      "text": "Discuss the constitutional safeguards for the independence of the Election Commission of India and the debates around strengthening them.",
+      "parts": [
+        { "id": "p1", "demand": "Constitutional safeguards", "cues": ["article 324", "removal", "tenure", "conditions of service", "safeguard"] },
+        { "id": "p2", "demand": "Debates on strengthening independence", "cues": ["appointment", "collegium", "debate", "reform", "selection"] }
+      ],
+      "directive_codes": ["DISCUSS"],
+      "syllabus_codes": ["GS2.CONST_BODIES"],
+      "dimensions_expected": ["constitutional", "governance", "legal"],
+      "priority_reasons": ["Core syllabus item: constitutional bodies", "Recurring governance debate around institutional independence"],
+      "skill_tags_targeted": ["DEMAND.parts_missed", "EVIDENCE.unsupported_claim"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": ["const-art-324"] }
+    },
+    {
+      "slug": "gs2-nfsa-pds",
+      "question_type": "GS_15M",
+      "text": "Examine how the National Food Security Act, 2013 changed India's approach to food security. What challenges limit the effectiveness of the Public Distribution System today?",
+      "parts": [
+        { "id": "p1", "demand": "Change in approach brought by NFSA (rights-based entitlements)", "cues": ["rights-based", "entitlement", "legal right", "coverage", "75", "50"] },
+        { "id": "p2", "demand": "Challenges limiting PDS effectiveness", "cues": ["leakage", "exclusion", "targeting", "storage", "nutrition", "challenge"] }
+      ],
+      "directive_codes": ["EXAMINE"],
+      "syllabus_codes": ["GS2.WELFARE", "GS2.SOCIAL_SECTOR"],
+      "dimensions_expected": ["social", "economic", "governance", "legal"],
+      "priority_reasons": ["Core syllabus item: welfare schemes and hunger", "Links GS-II welfare with GS-III PDS"],
+      "skill_tags_targeted": ["ANALYSIS.mechanism_missing", "EVIDENCE.factual_error"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": ["summary-nfsa"] }
+    },
+    {
+      "slug": "gs2-right-to-privacy",
+      "question_type": "GS_10M",
+      "text": "Elucidate the significance of the recognition of privacy as a fundamental right for governance in a digital state.",
+      "parts": [
+        { "id": "p1", "demand": "What the recognition means (constitutional basis)", "cues": ["article 21", "puttaswamy", "fundamental right", "privacy"] },
+        { "id": "p2", "demand": "Implications for digital governance", "cues": ["data", "digital", "proportionality", "surveillance", "consent", "data protection"] }
+      ],
+      "directive_codes": ["ELUCIDATE"],
+      "syllabus_codes": ["GS2.POLITY", "GS2.GOVERNANCE"],
+      "dimensions_expected": ["constitutional", "legal", "technological", "governance"],
+      "priority_reasons": ["Core syllabus item: significant provisions and their interpretation", "Connects to e-governance and data protection"],
+      "skill_tags_targeted": ["EVIDENCE.no_examples", "ANALYSIS.mechanism_missing"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": ["const-art-21", "summary-puttaswamy", "summary-dpdp-act"] }
+    },
+    {
+      "slug": "gs2-education-rte",
+      "question_type": "GS_15M",
+      "text": "The Right to Education has improved enrolment but not learning outcomes to the same extent. Critically analyse this statement and suggest a way forward.",
+      "parts": [
+        { "id": "p1", "demand": "Gains in access/enrolment", "cues": ["enrolment", "access", "article 21a", "free and compulsory", "infrastructure"] },
+        { "id": "p2", "demand": "Gaps in learning outcomes and their causes", "cues": ["learning outcome", "quality", "teacher", "foundational", "assessment"] },
+        { "id": "p3", "demand": "Way forward", "cues": ["way forward", "should", "foundational literacy", "training", "measure"] }
+      ],
+      "directive_codes": ["CRITICALLY_ANALYSE"],
+      "syllabus_codes": ["GS2.SOCIAL_SECTOR", "GS2.WELFARE"],
+      "dimensions_expected": ["social", "constitutional", "governance", "economic"],
+      "priority_reasons": ["Core syllabus item: education and human resources"],
+      "skill_tags_targeted": ["ANALYSIS.one_sided", "ANALYSIS.no_judgement", "STRUCTURE.weak_conclusion"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": ["const-art-21a"] }
+    },
+    {
+      "slug": "gs2-neighbourhood-first",
+      "question_type": "GS_15M",
+      "text": "Evaluate India's 'Neighbourhood First' approach in the light of connectivity, security and economic interdependence in South Asia.",
+      "parts": [
+        { "id": "p1", "demand": "Connectivity dimension", "cues": ["connectivity", "infrastructure", "rail", "port", "energy"] },
+        { "id": "p2", "demand": "Security dimension", "cues": ["security", "border", "terror", "strategic"] },
+        { "id": "p3", "demand": "Economic interdependence and overall judgement", "cues": ["trade", "economic", "investment", "overall", "however"] }
+      ],
+      "directive_codes": ["EVALUATE"],
+      "syllabus_codes": ["GS2.IR"],
+      "dimensions_expected": ["international", "economic", "security"],
+      "priority_reasons": ["Core syllabus item: India and its neighbourhood"],
+      "skill_tags_targeted": ["DEMAND.parts_missed", "ANALYSIS.no_judgement", "EVIDENCE.no_examples"],
+      "dossier": { "reveal_policy": "post_attempt_only", "source_slugs": [] }
+    },
+    {
+      "slug": "gs2-civil-services-reform",
+      "question_type": "GS_10M",
+      "text": "Discuss the role of civil services in a democracy and the reforms needed to make them more accountable and responsive.",
+      "parts": [
+        { "id": "p1", "demand": "Role in a democracy", "cues": ["implementation", "policy", "continuity", "neutral", "role"] },
+        { "id": "p2", "demand": "Reforms for accountability and responsiveness", "cues": ["lateral", "performance", "accountab", "reform", "capacity"] }
+      ],
+      "directive_codes": ["DISCUSS"],
+      "syllabus_codes": ["GS2.GOVERNANCE"],
+      "dimensions_expected": ["governance", "social"],
+      "priority_reasons": ["Core syllabus item: role of civil services in a democracy"],
+      "skill_tags_targeted": ["EVIDENCE.unsupported_claim", "STRUCTURE.weak_intro"],
+      "dossier": { "reveal_policy": "pre_attempt_allowed", "source_slugs": [] }
+    }
+  ]
+}

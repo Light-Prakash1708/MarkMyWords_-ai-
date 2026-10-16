@@ -1,0 +1,120 @@
+{
+  "template_code": "UPSC_GS",
+  "title": "MarkMyWords GS answer rubric",
+  "exam_code": "UPSC_CSE",
+  "paper_codes": ["GS2", "GS3"],
+  "question_type_codes": ["GS_10M", "GS_15M"],
+  "version": "0.1.0",
+  "status": "calibrating",
+  "aggregation": "weighted_bands",
+  "max_band": 4,
+  "disclaimer": "This is MarkMyWords' own exam-aligned framework. UPSC does not publish a criterion-wise rubric. It has not yet been calibrated against human expert evaluators.",
+  "changelog": "0.1.0 — initial draft criteria and band descriptors. Status: calibrating (no calibration report attached).",
+  "criteria": [
+    {
+      "code": "DEMAND",
+      "name": "Question demand & directive",
+      "weight": 0.15,
+      "input_modes": ["typed", "handwritten", "student_transcribed", "ocr_confirmed"],
+      "skill_tags": ["DEMAND.parts_missed", "DEMAND.directive_misread"],
+      "notes_for_evaluator": "Judge whether every part of the question is addressed and whether the answer performs the moves the directive requires (e.g. 'critically analyse' needs both sides and a judgement). Do not reward length.",
+      "bands": [
+        { "band": 0, "descriptor_id": "DEMAND.0", "descriptor": "Does not engage with what the question asks.", "indicators": ["answers a different question"], "common_failures": ["topic dump"] },
+        { "band": 1, "descriptor_id": "DEMAND.1", "descriptor": "Addresses the topic but misses most parts or misreads the directive.", "indicators": ["one part only"], "common_failures": ["describes when asked to evaluate"] },
+        { "band": 2, "descriptor_id": "DEMAND.2", "descriptor": "Addresses some parts; directive partly followed.", "indicators": ["one part thin"], "common_failures": ["no judgement for evaluative directives"] },
+        { "band": 3, "descriptor_id": "DEMAND.3", "descriptor": "Addresses all parts; directive followed with minor gaps.", "indicators": ["all parts present"], "common_failures": ["uneven depth across parts"] },
+        { "band": 4, "descriptor_id": "DEMAND.4", "descriptor": "Addresses every part with balanced depth and fully performs the directive.", "indicators": ["explicit judgement where asked"], "common_failures": [] }
+      ]
+    },
+    {
+      "code": "CONTENT",
+      "name": "Content & dimensions",
+      "weight": 0.2,
+      "input_modes": ["typed", "handwritten", "student_transcribed", "ocr_confirmed"],
+      "skill_tags": ["CONTENT.dimension_gap", "CONTENT.irrelevance"],
+      "notes_for_evaluator": "Judge relevance and the range of dimensions that matter for THIS question (constitutional, legal, economic, social, environmental, international, governance, technological, security). A checklist dump of irrelevant dimensions is not a strength.",
+      "bands": [
+        { "band": 0, "descriptor_id": "CONTENT.0", "descriptor": "Largely irrelevant or absent content.", "indicators": [], "common_failures": ["off-topic"] },
+        { "band": 1, "descriptor_id": "CONTENT.1", "descriptor": "One relevant dimension, thinly covered.", "indicators": [], "common_failures": ["single-angle answer"] },
+        { "band": 2, "descriptor_id": "CONTENT.2", "descriptor": "Two relevant dimensions; important ones missing.", "indicators": [], "common_failures": ["misses the obvious second dimension"] },
+        { "band": 3, "descriptor_id": "CONTENT.3", "descriptor": "Most relevant dimensions covered with reasonable depth.", "indicators": [], "common_failures": ["one dimension superficial"] },
+        { "band": 4, "descriptor_id": "CONTENT.4", "descriptor": "Relevant dimensions covered with depth and selectivity.", "indicators": [], "common_failures": [] }
+      ]
+    },
+    {
+      "code": "ANALYSIS",
+      "name": "Analysis & reasoning",
+      "weight": 0.25,
+      "input_modes": ["typed", "handwritten", "student_transcribed", "ocr_confirmed"],
+      "skill_tags": ["ANALYSIS.mechanism_missing", "ANALYSIS.no_judgement", "ANALYSIS.one_sided"],
+      "notes_for_evaluator": "Reward explanation of mechanisms (how and why), trade-offs, conditions under which claims hold, and a reasoned judgement. Assertions without reasoning are not analysis.",
+      "bands": [
+        { "band": 0, "descriptor_id": "ANALYSIS.0", "descriptor": "Pure assertion; no reasoning.", "indicators": [], "common_failures": ["lists without explanation"] },
+        { "band": 1, "descriptor_id": "ANALYSIS.1", "descriptor": "States outcomes without explaining how they arise.", "indicators": [], "common_failures": ["no causal links"] },
+        { "band": 2, "descriptor_id": "ANALYSIS.2", "descriptor": "Some causal reasoning; one-sided or no judgement.", "indicators": [], "common_failures": ["one-sided"] },
+        { "band": 3, "descriptor_id": "ANALYSIS.3", "descriptor": "Clear mechanisms and both sides; judgement present but thinly argued.", "indicators": [], "common_failures": ["judgement not tied to the analysis"] },
+        { "band": 4, "descriptor_id": "ANALYSIS.4", "descriptor": "Mechanisms, trade-offs and conditions explained; judgement follows from the analysis.", "indicators": [], "common_failures": [] }
+      ]
+    },
+    {
+      "code": "EVIDENCE",
+      "name": "Evidence & accuracy",
+      "weight": 0.15,
+      "input_modes": ["typed", "handwritten", "student_transcribed", "ocr_confirmed"],
+      "skill_tags": ["EVIDENCE.unsupported_claim", "EVIDENCE.factual_error", "EVIDENCE.outdated_data", "EVIDENCE.no_examples"],
+      "notes_for_evaluator": "Reward accurate, relevant Articles, Acts, judgments, reports, data, schemes and examples. A factual error affects this criterion only and must be cited from the provided sources; otherwise mark it unverifiable.",
+      "bands": [
+        { "band": 0, "descriptor_id": "EVIDENCE.0", "descriptor": "No substantiation, or substantiation that is wrong.", "indicators": [], "common_failures": [] },
+        { "band": 1, "descriptor_id": "EVIDENCE.1", "descriptor": "Generic examples only, or a significant factual error.", "indicators": [], "common_failures": ["vague 'many studies show'"] },
+        { "band": 2, "descriptor_id": "EVIDENCE.2", "descriptor": "Some specific evidence; gaps or minor inaccuracies.", "indicators": [], "common_failures": [] },
+        { "band": 3, "descriptor_id": "EVIDENCE.3", "descriptor": "Specific, accurate evidence for most claims.", "indicators": [], "common_failures": [] },
+        { "band": 4, "descriptor_id": "EVIDENCE.4", "descriptor": "Precise, accurate, well-chosen evidence supporting the key claims.", "indicators": [], "common_failures": [] }
+      ]
+    },
+    {
+      "code": "STRUCTURE",
+      "name": "Structure & flow",
+      "weight": 0.1,
+      "input_modes": ["typed", "handwritten", "student_transcribed", "ocr_confirmed"],
+      "skill_tags": ["STRUCTURE.weak_intro", "STRUCTURE.weak_conclusion", "STRUCTURE.poor_flow"],
+      "notes_for_evaluator": "Judge FUNCTION, not template: does the opening frame the question, does the body progress logically, does the ending synthesise and look forward? Unconventional structures that do these things are not penalised.",
+      "bands": [
+        { "band": 0, "descriptor_id": "STRUCTURE.0", "descriptor": "No discernible organisation.", "indicators": [], "common_failures": [] },
+        { "band": 1, "descriptor_id": "STRUCTURE.1", "descriptor": "Loose organisation; no framing or ending.", "indicators": [], "common_failures": [] },
+        { "band": 2, "descriptor_id": "STRUCTURE.2", "descriptor": "Recognisable organisation; framing or synthesis weak.", "indicators": [], "common_failures": ["conclusion repeats the body"] },
+        { "band": 3, "descriptor_id": "STRUCTURE.3", "descriptor": "Frames, progresses and concludes, with minor flow issues.", "indicators": [], "common_failures": [] },
+        { "band": 4, "descriptor_id": "STRUCTURE.4", "descriptor": "Opening frames the question; logical progression; ending synthesises and looks forward.", "indicators": [], "common_failures": [] }
+      ]
+    },
+    {
+      "code": "PRESENTATION",
+      "name": "Presentation (handwritten)",
+      "weight": 0.05,
+      "input_modes": ["handwritten", "ocr_confirmed"],
+      "skill_tags": ["PRESENTATION.no_visuals", "PRESENTATION.legibility"],
+      "notes_for_evaluator": "Handwritten answers only: diagrams, flowcharts, maps, headings, underlining and legibility. Never penalise handwriting style itself; only legibility that would hinder an examiner.",
+      "bands": [
+        { "band": 0, "descriptor_id": "PRESENTATION.0", "descriptor": "Largely illegible or unreadable layout.", "indicators": [], "common_failures": [] },
+        { "band": 1, "descriptor_id": "PRESENTATION.1", "descriptor": "Dense, hard-to-scan page.", "indicators": [], "common_failures": [] },
+        { "band": 2, "descriptor_id": "PRESENTATION.2", "descriptor": "Readable; no visual aids or headings.", "indicators": [], "common_failures": [] },
+        { "band": 3, "descriptor_id": "PRESENTATION.3", "descriptor": "Readable with headings or one useful visual.", "indicators": [], "common_failures": [] },
+        { "band": 4, "descriptor_id": "PRESENTATION.4", "descriptor": "Clear layout with purposeful visuals that add meaning.", "indicators": [], "common_failures": [] }
+      ]
+    },
+    {
+      "code": "LANGUAGE",
+      "name": "Precision & language",
+      "weight": 0.1,
+      "input_modes": ["typed", "handwritten", "student_transcribed", "ocr_confirmed"],
+      "skill_tags": ["LANGUAGE.verbosity", "LANGUAGE.imprecise_terms", "TIME.over_limit", "TIME.incomplete"],
+      "notes_for_evaluator": "Clarity, concision and correct terminology. Weighted low. Never comment harshly on grammar; flag only what impairs meaning or wastes words. Word-limit status is computed by code.",
+      "bands": [
+        { "band": 0, "descriptor_id": "LANGUAGE.0", "descriptor": "Meaning frequently unclear.", "indicators": [], "common_failures": [] },
+        { "band": 1, "descriptor_id": "LANGUAGE.1", "descriptor": "Wordy or imprecise; meaning sometimes unclear.", "indicators": [], "common_failures": [] },
+        { "band": 2, "descriptor_id": "LANGUAGE.2", "descriptor": "Clear but wordy or loose with terms.", "indicators": [], "common_failures": [] },
+        { "band": 3, "descriptor_id": "LANGUAGE.3", "descriptor": "Clear and mostly concise; terms used correctly.", "indicators": [], "common_failures": [] },
+        { "band": 4, "descriptor_id": "LANGUAGE.4", "descriptor": "Crisp, precise and economical.", "indicators": [], "common_failures": [] }
+      ]
+    }
+  ]
+}
