@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { z } from "zod";
 import { getEnv } from "@/lib/env";
-import { extractJson, GeminiProvider, toGeminiSchema } from "@/lib/llm/gemini";
+import { extractJson, GeminiProvider, thinkingConfigFor, toGeminiSchema } from "@/lib/llm/gemini";
+import { studentFacingError } from "@/lib/services/jobs";
+import { withDeadline } from "@/lib/util/deadline";
 import { getProvider, providerLabel, setProviderOverride } from "@/lib/llm";
 import { estimateCostInr } from "@/lib/llm/cost";
 import type { StructuredRequest } from "@/lib/llm/types";
@@ -93,6 +95,24 @@ describe("Gemini provider", () => {
     const { calls, fetchImpl } = stub([err(400, { error: { message: "API key not valid. Please pass a valid API key." } })]);
     await expect(new GeminiProvider("bad", { fetchImpl, sleep: noSleep }).structured(req())).rejects.toThrow(/400/);
     expect(calls.length).toBe(1);
+  });
+
+  it("asks for low thinking and drops the setting if a model rejects it", async () => {
+    expect(thinkingConfigFor("gemini-3.8-flash")).toEqual({ thinkingLevel: "low" });
+    expect(thinkingConfigFor("gemini-2.5-flash")).toEqual({ thinkingBudget: 0 });
+    const { calls, fetchImpl } = stub([err(400, { error: { message: "thinking_level is not supported for this model" } }), ok('{"verdict":"good","points":["a"]}')]);
+    await new GeminiProvider("k", { fetchImpl, sleep: noSleep }).structured(req());
+    expect((calls[0].body.generationConfig as Record<string, unknown>).thinkingConfig).toEqual({ thinkingLevel: "low" });
+    expect((calls[1].body.generationConfig as Record<string, unknown>).thinkingConfig).toBeUndefined();
+  });
+
+  it("stops before the job's time budget runs out instead of being killed mid-call", async () => {
+    const { calls, fetchImpl } = stub([ok("{}")]);
+    await expect(withDeadline(8_000, () => new GeminiProvider("k", { fetchImpl, sleep: noSleep }).structured(req()))).rejects.toThrow();
+    expect(calls.length).toBe(0);
+    expect(studentFacingError("evaluate", "Time budget exhausted before the Gemini call")).toMatch(/took too long/);
+    expect(studentFacingError("evaluate", "Gemini API 429 (x): quota")).toMatch(/usage limit/);
+    expect(studentFacingError("ocr", "Gemini API 400: API key not valid")).toMatch(/configuration problem/);
   });
 
   it("reduces schemas to the documented subset", () => {

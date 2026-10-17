@@ -2,6 +2,7 @@ import { after } from "next/server";
 import type { DB } from "../db";
 import { parseJson, toJson } from "../db";
 import { getEnv } from "../env";
+import { withDeadline } from "../util/deadline";
 import { newId, nowIso } from "../util/ids";
 
 /**
@@ -42,13 +43,27 @@ export async function hasPendingJobs(db: DB): Promise<boolean> {
   return !!(await db.get("SELECT 1 AS x FROM jobs WHERE status IN ('queued','running') LIMIT 1"));
 }
 
-const STALE_MS = 6 * 60_000;
+/** What a student sees when background work fails (details stay in jobs.last_error and logs). */
+export function studentFacingError(kind: JobKind, message: string): string {
+  const what = kind === "evaluate" ? "The AI evaluator" : "Handwriting reading";
+  if (/time budget|did not respond within|timed out|408/i.test(message)) return `${what} took too long to respond. Your work is saved — please try again in a minute.`;
+  if (/\b429\b|quota|RESOURCE_EXHAUSTED/i.test(message)) return `${what} is at its usage limit right now. Your work is saved — please try again later.`;
+  if (/API key|PERMISSION_DENIED|\b40[13]\b/i.test(message)) return `${what} is not available because of a configuration problem on our side. Your work is saved.`;
+  return `${what} could not finish this time. Your work is saved — please try again.`;
+}
 
 type G = typeof globalThis & { __mmwJobsRunning?: boolean; __mmwJobsRerun?: boolean };
 
-export async function runPendingJobs(db: DB, max = 20): Promise<number> {
+export async function runPendingJobs(db: DB, max?: number): Promise<number> {
+  const env = getEnv();
+  // On serverless, one invocation handles one job so it stays inside the function time limit;
+  // every request (and the attempt page while it polls) kicks the queue again.
+  const limit = max ?? (env.onVercel ? 1 : 20);
+  const staleMs = env.jobBudgetMs + 90_000;
   const g = globalThis as G;
-  if (g.__mmwJobsRunning) {
+  // A per-process lock only helps on a long-running server. Serverless instances serve several
+  // requests at once, and the atomic claim below already prevents double work.
+  if (!env.onVercel && g.__mmwJobsRunning) {
     // Another runner in this process is draining the queue; ask it to look once more before stopping.
     g.__mmwJobsRerun = true;
     return 0;
@@ -59,30 +74,37 @@ export async function runPendingJobs(db: DB, max = 20): Promise<number> {
     await db.run(
       "UPDATE jobs SET status = 'queued', updated_at = ? WHERE status = 'running' AND updated_at < ?",
       nowIso(),
-      new Date(Date.now() - STALE_MS).toISOString(),
+      new Date(Date.now() - staleMs).toISOString(),
     );
-    for (let i = 0; i < max; i++) {
+    for (let i = 0; i < limit; i++) {
       g.__mmwJobsRerun = false;
       const job = (await db.get(`UPDATE jobs SET status = 'running', attempts = attempts + 1, updated_at = ?
            WHERE id = (SELECT id FROM jobs WHERE status = 'queued' AND run_after <= ? ORDER BY created_at LIMIT 1)
            RETURNING id, kind, payload, attempts`, nowIso(), nowIso())) as { id: string; kind: JobKind; payload: string; attempts: number } | undefined;
       if (!job) {
-        if (g.__mmwJobsRerun) continue;
+        if (g.__mmwJobsRerun && !env.onVercel) continue;
         break;
       }
       const payload = parseJson<Record<string, string>>(job.payload, {});
       try {
-        if (job.kind === "evaluate") {
-          const { runEvaluationJob } = await import("./evaluations");
-          await runEvaluationJob(db, payload.evaluation_id);
-        } else if (job.kind === "ocr") {
-          const { runOcrJob } = await import("./ocr-jobs");
-          await runOcrJob(db, payload.attempt_id);
-        }
+        const started = Date.now();
+        await withDeadline(env.jobBudgetMs, async () => {
+          if (job.kind === "evaluate") {
+            const { runEvaluationJob } = await import("./evaluations");
+            await runEvaluationJob(db, payload.evaluation_id);
+          } else if (job.kind === "ocr") {
+            const { runOcrJob } = await import("./ocr-jobs");
+            await runOcrJob(db, payload.attempt_id);
+          }
+        });
+        console.info(`[mmw] job ${job.kind} done in ${Date.now() - started}ms (attempt ${job.attempts})`);
         (await db.run("UPDATE jobs SET status = 'done', updated_at = ? WHERE id = ?", nowIso(), job.id));
       } catch (e) {
         const msg = (e as Error).message?.slice(0, 500) ?? "error";
-        const retryable = !(e as { permanent?: boolean }).permanent && job.attempts < 3;
+        console.error(`[mmw] job ${job.kind} failed (attempt ${job.attempts}): ${msg}`);
+        // Timeouts get one retry; other transient errors up to three attempts.
+        const timedOut = /time budget|did not respond within|timed out/i.test(msg);
+        const retryable = !(e as { permanent?: boolean }).permanent && job.attempts < (timedOut ? 2 : 3);
         if (retryable) {
           const delay = 5000 * 2 ** (job.attempts - 1);
           (await db.run("UPDATE jobs SET status = 'queued', run_after = ?, last_error = ?, updated_at = ? WHERE id = ?", new Date(Date.now() + delay).toISOString(), msg, nowIso(), job.id));
@@ -90,10 +112,10 @@ export async function runPendingJobs(db: DB, max = 20): Promise<number> {
           (await db.run("UPDATE jobs SET status = 'failed', last_error = ?, updated_at = ? WHERE id = ?", msg, nowIso(), job.id));
           if (job.kind === "evaluate") {
             const { markEvaluationFailed } = await import("./evaluations");
-            (await markEvaluationFailed(db, payload.evaluation_id, msg));
+            (await markEvaluationFailed(db, payload.evaluation_id, studentFacingError("evaluate", msg)));
           } else if (job.kind === "ocr") {
             const { markOcrFailed } = await import("./ocr-jobs");
-            (await markOcrFailed(db, payload.attempt_id, msg));
+            (await markOcrFailed(db, payload.attempt_id, studentFacingError("ocr", msg)));
           }
         }
       }

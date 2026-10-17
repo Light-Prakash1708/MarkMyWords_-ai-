@@ -1,3 +1,4 @@
+import { remainingMs } from "../util/deadline";
 import { type LlmProvider, ProviderError, type StructuredRequest, type StructuredResponse } from "./types";
 
 /**
@@ -62,6 +63,18 @@ interface GeminiResponse {
   modelVersion?: string;
 }
 
+/**
+ * Keep thinking short: evaluation has to fit in a serverless time budget, and the rubric already
+ * structures the reasoning. Gemini 3+/4 take thinkingLevel; 2.5 models take thinkingBudget.
+ */
+export function thinkingConfigFor(model: string): Record<string, unknown> | undefined {
+  if (/^gemini-2\.5-flash-lite/.test(model)) return undefined;
+  if (/^gemini-2\.5-pro/.test(model)) return { thinkingBudget: 512 };
+  if (/^gemini-2\.5/.test(model)) return { thinkingBudget: 0 };
+  if (/^gemini-(\d+(\.\d+)?)|^gemini-.*latest$/.test(model)) return { thinkingLevel: "low" };
+  return undefined;
+}
+
 /** Pull the JSON object out of a model reply (tolerates code fences and leading prose). */
 export function extractJson(text: string): unknown {
   const t = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
@@ -98,6 +111,7 @@ export class GeminiProvider implements LlmProvider {
     const chain = [req.model, ...(this.opts.fallbackModels ?? [])].filter((m, i, a) => m && a.indexOf(m) === i);
     let lastErr: unknown;
     for (const model of chain) {
+      if (remainingMs() < 15_000) break;
       try {
         return await this.withModel(req, model);
       } catch (e) {
@@ -111,12 +125,13 @@ export class GeminiProvider implements LlmProvider {
 
   private async withModel<T>(req: StructuredRequest<T>, model: string): Promise<StructuredResponse<T>> {
     let useSchemaField = true;
+    let useThinking = true;
     let repairNote: string | null = null;
     const usage = { inputTokens: 0, outputTokens: 0 };
     let lastErr: unknown;
     for (let attempt = 0; attempt < 4; attempt++) {
       try {
-        const json = await this.call(model, this.body(req, useSchemaField, repairNote));
+        const json = await this.call(model, this.body(req, model, useSchemaField, useThinking, repairNote));
         usage.inputTokens += json.usageMetadata?.promptTokenCount ?? 0;
         usage.outputTokens += (json.usageMetadata?.candidatesTokenCount ?? 0) + (json.usageMetadata?.thoughtsTokenCount ?? 0);
         if (json.promptFeedback?.blockReason) throw new ProviderError(`Gemini blocked the request (${json.promptFeedback.blockReason})`, false, 400);
@@ -132,6 +147,10 @@ export class GeminiProvider implements LlmProvider {
         return { output: parsed.data, usage, model: json.modelVersion || model };
       } catch (e) {
         lastErr = e;
+        if (e instanceof ProviderError && e.status === 400 && useThinking && /thinking/i.test(e.message)) {
+          useThinking = false; // this model rejects the thinking setting; use its default
+          continue;
+        }
         if (e instanceof ProviderError && e.status === 400 && useSchemaField && /schema|responseJsonSchema|response_json_schema|Unknown name/i.test(e.message)) {
           useSchemaField = false; // older API surface: describe the schema in the prompt instead
           continue;
@@ -139,13 +158,15 @@ export class GeminiProvider implements LlmProvider {
         const retryable = e instanceof ProviderError ? e.retryable : (e as Error).name === "AbortError" || e instanceof TypeError;
         if (!retryable || attempt === 3) break;
         const wait = e instanceof ProviderError && e.retryAfterMs ? e.retryAfterMs : 800 * 2 ** attempt + Math.random() * 300;
+        if (remainingMs() < wait + 20_000) break; // not enough time left for another call
         await (this.opts.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms))))(wait);
       }
     }
     throw lastErr instanceof Error ? lastErr : new ProviderError("Gemini request failed", false);
   }
 
-  private body<T>(req: StructuredRequest<T>, useSchemaField: boolean, repairNote: string | null) {
+  private body<T>(req: StructuredRequest<T>, model: string, useSchemaField: boolean, useThinking: boolean, repairNote: string | null) {
+    const thinking = useThinking ? thinkingConfigFor(model) : undefined;
     const schema = toGeminiSchema(req.jsonSchema);
     const instructions = [
       req.system,
@@ -171,13 +192,17 @@ export class GeminiProvider implements LlmProvider {
         maxOutputTokens: req.maxTokens + 8192,
         responseMimeType: "application/json",
         ...(useSchemaField ? { responseJsonSchema: schema } : {}),
+        ...(thinking ? { thinkingConfig: thinking } : {}),
       },
     };
   }
 
   private async call(model: string, body: unknown): Promise<GeminiResponse> {
+    const budget = Math.min(this.opts.timeoutMs ?? 120_000, remainingMs() - 5_000);
+    if (budget < 10_000) throw new ProviderError("Time budget exhausted before the Gemini call", false, 408);
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), this.opts.timeoutMs ?? 120_000);
+    const timer = setTimeout(() => ctrl.abort(), budget);
+    const started = Date.now();
     try {
       const res = await (this.opts.fetchImpl ?? fetch)(`${this.baseUrl}/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
         method: "POST",
@@ -187,6 +212,7 @@ export class GeminiProvider implements LlmProvider {
       });
       if (!res.ok) {
         const text = await res.text().catch(() => "");
+        console.warn(`[mmw] gemini ${model} HTTP ${res.status} after ${Date.now() - started}ms`);
         let retryAfterMs: number | undefined;
         let perDay = false;
         try {
@@ -205,7 +231,16 @@ export class GeminiProvider implements LlmProvider {
         if (retryable && retryAfterMs) e.retryAfterMs = retryAfterMs;
         throw e;
       }
-      return (await res.json()) as GeminiResponse;
+      const json = (await res.json()) as GeminiResponse;
+      const u = json.usageMetadata;
+      console.info(`[mmw] gemini ${model} ok ${Date.now() - started}ms in=${u?.promptTokenCount ?? 0} out=${u?.candidatesTokenCount ?? 0} think=${u?.thoughtsTokenCount ?? 0} finish=${json.candidates?.[0]?.finishReason ?? "?"}`);
+      return json;
+    } catch (e) {
+      if ((e as Error).name === "AbortError") {
+        console.warn(`[mmw] gemini ${model} timed out after ${Date.now() - started}ms`);
+        throw new ProviderError(`Gemini (${model}) did not respond within ${Math.round(budget / 1000)}s`, true, 408);
+      }
+      throw e;
     } finally {
       clearTimeout(timer);
     }

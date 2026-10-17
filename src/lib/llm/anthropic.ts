@@ -1,4 +1,5 @@
 import { getEnv } from "../env";
+import { remainingMs } from "../util/deadline";
 import { type LlmProvider, ProviderError, type StructuredRequest, type StructuredResponse } from "./types";
 
 /**
@@ -35,8 +36,13 @@ export class AnthropicProvider implements LlmProvider {
 
     let lastErr: unknown;
     for (let attempt = 0; attempt < 3; attempt++) {
+      const budget = Math.min(this.timeoutMs, remainingMs() - 5_000);
+      if (budget < 10_000) {
+        lastErr = new ProviderError("Time budget exhausted before the Claude call", false, 408);
+        break;
+      }
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), this.timeoutMs);
+      const timer = setTimeout(() => ctrl.abort(), budget);
       try {
         const res = await fetch(`${this.baseUrl}/v1/messages`, {
           method: "POST",
@@ -70,7 +76,7 @@ export class AnthropicProvider implements LlmProvider {
       } catch (e) {
         lastErr = e;
         const retryable = e instanceof ProviderError ? e.retryable : (e as Error).name === "AbortError" || e instanceof TypeError;
-        if (!retryable || attempt === 2) break;
+        if (!retryable || attempt === 2 || remainingMs() < 30_000) break;
         await new Promise((r) => setTimeout(r, 800 * 2 ** attempt + Math.random() * 300));
       } finally {
         clearTimeout(timer);

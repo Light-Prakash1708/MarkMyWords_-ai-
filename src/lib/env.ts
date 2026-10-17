@@ -133,6 +133,8 @@ export function getEnv() {
     maxPdfBytes: int(process.env.MMW_MAX_PDF_BYTES, onVercel ? 4 * 1024 * 1024 : 25 * 1024 * 1024),
     maxPagesPerAttempt: int(process.env.MMW_MAX_PAGES, 12),
     signupsPerIpPerHour: int(process.env.MMW_SIGNUPS_PER_IP_PER_HOUR, 10),
+    /** Time budget per background job; must stay below the platform's function limit (300 s here). */
+    jobBudgetMs: int(process.env.MMW_JOB_BUDGET_MS, onVercel ? 230_000 : 600_000),
   };
 }
 

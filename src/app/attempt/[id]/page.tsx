@@ -111,7 +111,7 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
     const failed = ev?.status === "failed" ? ev.error : null;
     body = (
       <>
-        {failed && <div className="error-box" style={{ marginBottom: 14 }}>The last evaluation attempt failed ({failed}). Your answer is safe — try again.</div>}
+        {failed && <div className="error-box" style={{ marginBottom: 14 }}>{failed}</div>}
         <SelfAssess attemptId={a.id} criteria={crit} maxBand={rv.max_band} existing={(await getSelfAssessment(db, a.id))?.ratings ?? null} aiAvailable={aiAvailable} />
       </>
     );
@@ -120,7 +120,7 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
     body = (
       <>
         <Poller />
-        <PenSpinner label={aiAvailable ? "Marking your answer — three independent passes, then checks…" : "Marking your answer…"} />
+        <PenSpinner label={aiAvailable ? "Marking your answer — independent passes, then checks. This usually takes under two minutes…" : "Marking your answer…"} />
       </>
     );
   } else if (a.status === "evaluated" && ev?.result) {
