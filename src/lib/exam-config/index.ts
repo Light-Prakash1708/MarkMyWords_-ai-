@@ -47,6 +47,8 @@ export const ExamConfigSchema = z.object({
     name: z.string(),
     short_name: z.string(),
     status: z.enum(["active", "inactive"]),
+    /** live = fully launched; preview = usable and clearly labelled while content and rubric mature. */
+    stage: z.enum(["live", "preview"]).default("live"),
     config_version: z.string(),
     input_modes: z.array(z.enum(["typed", "handwritten"])).min(1),
     default_input_mode: z.enum(["typed", "handwritten"]),
@@ -189,4 +191,23 @@ export function loadSourceFiles(dir = path.join(getEnv().contentDir, "sources"))
     .filter((f) => f.endsWith(".json"))
     .sort()
     .map((f) => SourceFileSchema.parse(JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"))));
+}
+
+export const TrialConfigSchema = z.object({
+  trial: z.object({
+    answers_per_exam: z.number().int().min(1).max(10),
+    rewrites_per_question: z.number().int().min(0).max(3),
+    guest_session_days: z.number().int().min(1).max(30),
+    max_new_guests_per_ip_per_day: z.number().int().min(1),
+    max_new_guests_per_day: z.number().int().min(1),
+    max_guest_evaluations_per_day: z.number().int().min(1),
+    purge_guests_after_days: z.number().int().min(1),
+    questions: z.record(z.string(), z.array(z.string()).min(1)),
+  }),
+});
+export type TrialConfig = z.infer<typeof TrialConfigSchema>["trial"];
+
+/** Guest-trial settings (config/trial.yaml). */
+export function loadTrialConfig(file = path.join(getEnv().configDir, "trial.yaml")): TrialConfig {
+  return TrialConfigSchema.parse(readYaml(file)).trial;
 }

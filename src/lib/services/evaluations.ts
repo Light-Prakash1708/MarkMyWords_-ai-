@@ -18,6 +18,7 @@ import { getOwnedAttempt, getSelfAssessment, latestTranscript, type AttemptRow }
 import { enqueue } from "./jobs";
 import { directivesFor, getQuestion, type QuestionView } from "./questions";
 import { applyEvaluationToSkills } from "./skills";
+import { assertGuestEvaluationBudget, GUEST_PLAN } from "./trial";
 
 export interface RubricVersionRow {
   id: string;
@@ -63,8 +64,10 @@ export async function requestEvaluation(db: DB, userId: string, attemptId: strin
   const env = getEnv();
   const provider = getProvider();
   (await rateLimit(db, `evaluate:burst:${userId}`, 20, 3600));
-  if (provider?.name === "anthropic") {
-    const used = ((await db.get("SELECT COUNT(*) AS n FROM evaluations e JOIN attempts a ON a.id = e.attempt_id WHERE a.user_id = ? AND e.provider = 'anthropic' AND e.created_at >= ?", userId, istDayStartIso())) as { n: number }).n;
+  const owner = (await db.get("SELECT plan FROM users WHERE id = ?", userId)) as { plan: string } | undefined;
+  if (owner?.plan === GUEST_PLAN && provider && provider.name !== "mock") await assertGuestEvaluationBudget(db);
+  if (provider && provider.name !== "mock") {
+    const used = ((await db.get("SELECT COUNT(*) AS n FROM evaluations e JOIN attempts a ON a.id = e.attempt_id WHERE a.user_id = ? AND e.provider IN ('anthropic','gemini') AND e.created_at >= ?", userId, istDayStartIso())) as { n: number }).n;
     if (used >= env.freeEvalsPerDay) {
       throw new AppError("QUOTA_EXCEEDED", `You have used today's ${env.freeEvalsPerDay} AI evaluations. Your answer is saved — evaluate it tomorrow.`);
     }
@@ -165,7 +168,7 @@ export async function runEvaluationJob(db: DB, evaluationId: string) {
   (await db.run("UPDATE evaluations SET status = 'running' WHERE id = ?", ev.id));
   const provider = getProvider();
   const label = providerLabel(provider);
-  if (provider?.name === "anthropic") (await assertSpendCapNotReached(db));
+  if (provider && provider.name !== "mock") (await assertSpendCapNotReached(db));
   const input = (await buildEvaluationInput(db, a, ev.rubric_version_id));
   const judge = provider ? new LlmJudge(provider) : new HeuristicJudge();
   input.engine.prompt_version = judge.promptVersion;

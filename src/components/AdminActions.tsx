@@ -111,3 +111,29 @@ export function ActivateRubric({ id }: { id: string }) {
     </span>
   );
 }
+
+/** One-click live check that the configured AI provider (Gemini/Claude) answers with structured output. */
+export function ProviderCheck() {
+  const [busy, setBusy] = useState(false);
+  const [out, setOut] = useState<{ ok: boolean; provider?: string; model?: string; latency_ms?: number; message?: string } | null>(null);
+  const run = async () => {
+    setBusy(true);
+    setOut(null);
+    try {
+      setOut(await api("/api/admin/provider-check", { body: {} }));
+    } catch (e) {
+      setOut({ ok: false, message: e instanceof ApiError ? e.message : "Check failed." });
+    }
+    setBusy(false);
+  };
+  return (
+    <div className="card flat stack" style={{ ["--gap" as string]: "8px" }}>
+      <div className="row between"><strong>AI provider check</strong><button className="btn sm" disabled={busy} onClick={run}>{busy ? "Checking…" : "Run check"}</button></div>
+      {out && (
+        <div className={out.ok ? "note-box small" : "error-box small"} role="status">
+          {out.ok ? `Working: ${out.provider} · ${out.model} · ${out.latency_ms} ms` : `Not working${out.provider ? ` (${out.provider}${out.model ? ` · ${out.model}` : ""})` : ""}: ${out.message ?? "unknown error"}`}
+        </div>
+      )}
+    </div>
+  );
+}

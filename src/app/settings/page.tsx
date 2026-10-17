@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/http";
 import { listExams } from "@/lib/services/questions";
 import { getConsents } from "@/lib/services/users";
 import { ConsentToggles, DeleteAccount, ProfileForm } from "@/components/SettingsForms";
+import { isGuest } from "@/lib/services/trial";
 
 export const metadata = { title: "Settings" };
 export const dynamic = "force-dynamic";
@@ -11,6 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function Settings() {
   const user = await currentUser();
   if (!user) redirect("/login");
+  if (isGuest(user)) redirect("/try");
   const db = (await getDb());
   return (
     <div className="page container" style={{ maxWidth: 860 }}>

@@ -10,6 +10,7 @@ import { getOwnedAttempt, getSelfAssessment, latestOcr, latestTranscript, listUp
 import { enabledCriteria, getRubricVersion, latestEvaluation, listDisputesForUser, rubricForQuestion } from "@/lib/services/evaluations";
 import { getLadder } from "@/lib/services/hints";
 import { hasPendingJobs, kickJobs } from "@/lib/services/jobs";
+import { isGuest } from "@/lib/services/trial";
 import { getQuestion } from "@/lib/services/questions";
 import { AppError } from "@/lib/util/errors";
 import { QuestionMeta } from "@/components/QuestionBits";
@@ -152,8 +153,17 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="page container">
+      {isGuest(user) && (
+        <div className="note-box row between small" style={{ marginBottom: 12, gap: 10 }}>
+          <span>Guest trial: this answer is private and kept for a limited time.{a.status === "evaluated" ? " Like the feedback? Save it to your own account." : ""}</span>
+          <span className="row" style={{ gap: 8 }}>
+            <Link className="btn sm ghost" href="/try">All trial questions</Link>
+            <Link className="btn sm" href="/signup">Save my work</Link>
+          </span>
+        </div>
+      )}
       <div className="row between" style={{ marginBottom: 10 }}>
-        <Link href={`/q/${q.slug}`} className="small">← Question</Link>
+        <Link href={isGuest(user) ? "/try" : `/q/${q.slug}`} className="small">{isGuest(user) ? "← Trial questions" : "← Question"}</Link>
         <span className="chip">{a.attempt_kind === "first" ? "First attempt" : a.attempt_kind === "rewrite" ? "Rewrite" : "Transfer check"} · {a.mode}</span>
       </div>
       <details className="card flat bg-paper2" style={{ marginBottom: 18 }} open={a.status === "draft"}>

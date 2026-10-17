@@ -3,7 +3,7 @@ import path from "node:path";
 import type { DB } from "../db";
 import { toJson } from "../db";
 import { getEnv } from "../env";
-import { getProvider } from "../llm";
+import { getOcrProvider } from "../llm";
 import { assertSpendCapNotReached, recordCost } from "../llm/cost";
 import { buildTranscript, mockOcr, transcribeWithProvider } from "../ocr";
 import { rateLimit } from "../security/rate-limit";
@@ -27,7 +27,7 @@ export async function runOcrJob(db: DB, attemptId: string) {
     raw = mockOcr(pageCount);
     engine = "mock-ocr";
   } else {
-    const provider = getProvider();
+    const provider = getOcrProvider();
     if (!provider) throw Object.assign(new Error("No AI provider configured for OCR."), { permanent: true });
     (await assertSpendCapNotReached(db));
     (await rateLimit(db, `ocr:pages:${a.user_id}`, env.ocrPagesPerDay, 86400));

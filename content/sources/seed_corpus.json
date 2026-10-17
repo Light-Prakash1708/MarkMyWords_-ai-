@@ -291,7 +291,7 @@
       "license": "our_summary",
       "stale_after_days": 365,
       "chunks": [
-        "Under the amended RBI Act, 1934, the Central Government sets the inflation target in consultation with the RBI, and a six-member Monetary Policy Committee decides the policy repo rate. The target notified for 2016-2021 and retained for 2021-2026 was 4 per cent CPI inflation with a tolerance band of 2 to 6 per cent. Check the current notification, as the target is reviewed every five years.",
+        "Under the amended RBI Act, 1934, the Central Government sets the inflation target in consultation with the RBI, and a six-member Monetary Policy Committee decides the policy repo rate. The target is 4 per cent CPI inflation with a tolerance band of 2 to 6 per cent; it was first notified for 2016-2021 and retained for 2021-2026 and, in March 2026, for 2026-2031. Failure is defined as average inflation outside the band for three consecutive quarters.",
         "Monetary transmission can be slow because banks' cost of funds depends on deposit rates that reprice only as deposits mature, because rates on small savings schemes compete with bank deposits, and because stressed balance sheets and liquidity conditions affect how banks pass on rate changes.",
         "To improve transmission, the RBI moved from the base rate to the marginal cost of funds based lending rate (MCLR) in 2016 and required banks to link certain new floating-rate loans to an external benchmark such as the policy repo rate from October 2019."
       ],

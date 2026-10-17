@@ -64,7 +64,7 @@ interface Candidate {
 export async function evaluateAnswer(
   input: EvaluationInput,
   judge: Judge,
-  opts: { patternChecks?: CheckWithSource[]; isAi: boolean; providerName: "anthropic" | "heuristic" | "mock"; providerLabel: string },
+  opts: { patternChecks?: CheckWithSource[]; isAi: boolean; providerName: "anthropic" | "gemini" | "heuristic" | "mock"; providerLabel: string },
 ): Promise<EngineRun> {
   const text = input.transcript.text;
   const notes: string[] = [];

@@ -20,8 +20,8 @@ export const SignupSchema = z.object({
   target_exam_code: z.string().max(40).optional(),
 });
 
-export async function signup(db: DB, input: unknown, ip: string): Promise<{ user: SessionUser; token: string; expiresAt: Date }> {
-  (await rateLimit(db, `signup:ip:${ip}`, 10, 3600));
+export async function signup(db: DB, input: unknown, ip: string, guestUserId?: string | null): Promise<{ user: SessionUser; token: string; expiresAt: Date }> {
+  (await rateLimit(db, `signup:ip:${ip}`, getEnv().signupsPerIpPerHour, 3600));
   const parsed = SignupSchema.safeParse(input);
   if (!parsed.success) throw invalid("Please check your details.", parsed.error.flatten().fieldErrors);
   const { email, password, display_name } = parsed.data;
@@ -34,8 +34,18 @@ export async function signup(db: DB, input: unknown, ip: string): Promise<{ user
   const target = parsed.data.target_exam_code && exams.some((e) => e.code === parsed.data.target_exam_code) ? parsed.data.target_exam_code : exams[0]?.code ?? null;
   const env = getEnv();
   const role = env.adminEmails.includes(email) ? "admin" : "student";
-  const id = newId();
   const t = nowIso();
+  // Converting a guest trial keeps everything the guest wrote: same user row, new credentials.
+  const guest = guestUserId ? ((await db.get("SELECT id FROM users WHERE id = ? AND plan = 'guest'", guestUserId)) as { id: string } | undefined) : undefined;
+  if (guest) {
+    await db.transaction(async (db) => {
+      await db.run("UPDATE users SET email = ?, password_hash = ?, display_name = ?, role = ?, target_exam_code = ?, plan = 'free', updated_at = ? WHERE id = ?", email, await hashPassword(password), display_name, role, target, t, guest.id);
+      await destroyAllSessions(db, guest.id);
+    });
+    const session = (await createSession(db, guest.id));
+    return { user: { id: guest.id, email, display_name, role, target_exam_code: target, plan: "free" }, ...session };
+  }
+  const id = newId();
   (await db.run("INSERT INTO users (id, email, password_hash, display_name, role, target_exam_code, plan, created_at, updated_at) VALUES (?,?,?,?,?,?,'free',?,?)", id, email, await hashPassword(password), display_name, role, target, t, t));
   for (const purpose of CONSENT_PURPOSES) {
     (await db.run("INSERT INTO consents (id, user_id, purpose, granted, policy_version, created_at, updated_at) VALUES (?,?,?,0,?,?,?)", newId(), id, purpose, CONSENT_POLICY_VERSION, t, t));
@@ -111,24 +121,29 @@ export async function exportUserData(db: DB, userId: string) {
   };
 }
 
+/** Delete every row belonging to a user. Call inside a transaction. */
+export async function purgeUserRows(db: DB, userId: string) {
+  (await destroyAllSessions(db, userId));
+  // Explicit deletes (do not rely on FK cascades, which depend on per-connection PRAGMAs).
+  const evals = "SELECT e.id FROM evaluations e JOIN attempts a ON a.id = e.attempt_id WHERE a.user_id = ?";
+  const atts = "SELECT id FROM attempts WHERE user_id = ?";
+  for (const t of ["evaluation_comments", "citations"]) await db.run(`DELETE FROM ${t} WHERE evaluation_id IN (${evals})`, userId);
+  for (const t of ["disputes", "error_ledger", "retest_schedule"]) await db.run(`DELETE FROM ${t} WHERE user_id = ?`, userId);
+  for (const t of ["uploads", "ocr_runs", "transcripts", "self_assessments", "hint_ladder_state", "hint_content", "evaluations"])
+    await db.run(`DELETE FROM ${t} WHERE attempt_id IN (${atts})`, userId);
+  await db.run("UPDATE attempts SET parent_attempt_id = NULL WHERE user_id = ?", userId);
+  for (const t of ["attempts", "skill_states", "share_links", "consents", "sessions"]) await db.run(`DELETE FROM ${t} WHERE user_id = ?`, userId);
+  (await db.run("DELETE FROM users WHERE id = ?", userId));
+  (await db.run("DELETE FROM cost_ledger WHERE user_id = ?", userId));
+}
+
 /** Hard delete of every row belonging to the user, including uploaded page bytes. */
 export async function deleteAccount(db: DB, userId: string, confirmEmail: string) {
   const u = (await db.get("SELECT email FROM users WHERE id = ?", userId)) as { email: string } | undefined;
   if (!u) throw new AppError("NOT_FOUND", "Account not found");
   if (u.email !== confirmEmail.trim().toLowerCase()) throw invalid("Type your email exactly to confirm deletion.");
   await db.transaction(async (db) => {
-    (await destroyAllSessions(db, userId));
-    // Explicit deletes (do not rely on FK cascades, which depend on per-connection PRAGMAs).
-    const evals = "SELECT e.id FROM evaluations e JOIN attempts a ON a.id = e.attempt_id WHERE a.user_id = ?";
-    const atts = "SELECT id FROM attempts WHERE user_id = ?";
-    for (const t of ["evaluation_comments", "citations"]) await db.run(`DELETE FROM ${t} WHERE evaluation_id IN (${evals})`, userId);
-    for (const t of ["disputes", "error_ledger", "retest_schedule"]) await db.run(`DELETE FROM ${t} WHERE user_id = ?`, userId);
-    for (const t of ["uploads", "ocr_runs", "transcripts", "self_assessments", "hint_ladder_state", "hint_content", "evaluations"])
-      await db.run(`DELETE FROM ${t} WHERE attempt_id IN (${atts})`, userId);
-    await db.run("UPDATE attempts SET parent_attempt_id = NULL WHERE user_id = ?", userId);
-    for (const t of ["attempts", "skill_states", "share_links", "consents", "sessions"]) await db.run(`DELETE FROM ${t} WHERE user_id = ?`, userId);
-    (await db.run("DELETE FROM users WHERE id = ?", userId));
-    (await db.run("DELETE FROM cost_ledger WHERE user_id = ?", userId));
+    await purgeUserRows(db, userId);
     (await db.run("INSERT INTO audit_log (id, actor_user_id, action, target_type, target_id, reason, created_at) VALUES (?,?,?,?,?,?,?)", newId(), null, "account_deleted", "user", null, "user-initiated hard delete", nowIso()));
   });
 }

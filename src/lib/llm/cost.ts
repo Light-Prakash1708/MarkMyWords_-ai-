@@ -4,8 +4,9 @@ import { AppError } from "../util/errors";
 import { istDayStartIso, newId, nowIso } from "../util/ids";
 import type { Usage } from "./types";
 
-export function estimateCostInr(usage: Usage): number {
+export function estimateCostInr(usage: Usage, provider = "anthropic"): number {
   const env = getEnv();
+  if (provider === "gemini") return (usage.inputTokens / 1e6) * env.geminiPriceInputPerMTokInr + (usage.outputTokens / 1e6) * env.geminiPriceOutputPerMTokInr;
   return (usage.inputTokens / 1e6) * env.priceInputPerMTokInr + (usage.outputTokens / 1e6) * env.priceOutputPerMTokInr;
 }
 
@@ -13,7 +14,7 @@ export async function recordCost(
   db: DB,
   entry: { userId: string | null; operation: string; provider: string; model: string; usage: Usage; traceId?: string },
 ): Promise<number> {
-  const cost = entry.provider === "anthropic" ? estimateCostInr(entry.usage) : 0;
+  const cost = entry.provider === "anthropic" || entry.provider === "gemini" ? estimateCostInr(entry.usage, entry.provider) : 0;
   (await db.run("INSERT INTO cost_ledger (id, user_id, operation, provider, model_id, input_tokens, output_tokens, est_cost_inr, trace_id, created_at) VALUES (?,?,?,?,?,?,?,?,?,?)", newId(), entry.userId, entry.operation, entry.provider, entry.model, entry.usage.inputTokens, entry.usage.outputTokens, cost, entry.traceId ?? null, nowIso()));
   return cost;
 }

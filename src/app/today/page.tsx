@@ -10,6 +10,7 @@ import { dueRetests, getProgress, recommendNext } from "@/lib/services/skills";
 import { practiceStreak } from "@/lib/services/streak";
 import { QuestionCard, QuestionMeta, ReviewBadge } from "@/components/QuestionBits";
 import { Star } from "@/components/Landing";
+import { isGuest } from "@/lib/services/trial";
 
 export const metadata = { title: "Today" };
 export const dynamic = "force-dynamic";
@@ -22,6 +23,7 @@ function greeting() {
 export default async function Today({ searchParams }: { searchParams: Promise<{ welcome?: string }> }) {
   const user = await currentUser();
   if (!user) redirect("/login");
+  if (isGuest(user)) redirect("/try");
   const sp = await searchParams;
   const db = (await getDb());
   const env = getEnv();

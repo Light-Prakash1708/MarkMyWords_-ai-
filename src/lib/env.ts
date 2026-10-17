@@ -9,8 +9,33 @@ function num(v: string | undefined, d: number): number {
   return Number.isFinite(n) ? n : d;
 }
 
-export type ProviderName = "anthropic" | "heuristic" | "mock";
-export type OcrProviderName = "anthropic" | "mock" | "manual";
+export type ProviderName = "anthropic" | "gemini" | "heuristic" | "mock";
+export type OcrProviderName = "anthropic" | "gemini" | "mock" | "manual";
+
+/** Find an env var by any of several names, case-insensitively (Vercel keeps the casing you type). */
+function envAny(...names: string[]): string | undefined {
+  for (const n of names) if (process.env[n]) return process.env[n];
+  const wanted = new Set(names.map((n) => n.toLowerCase()));
+  for (const [k, v] of Object.entries(process.env)) if (v && wanted.has(k.toLowerCase())) return v;
+  return undefined;
+}
+
+/**
+ * Hosted libSQL/Turso connection. The Vercel Marketplace integration sets TURSO_DATABASE_URL and
+ * TURSO_AUTH_TOKEN, possibly with a custom prefix (e.g. STORAGE_TURSO_DATABASE_URL); accept those too.
+ */
+function tursoFromEnv(): { url: string; token?: string } | null {
+  const direct = envAny("TURSO_DATABASE_URL", "LIBSQL_URL", "MMW_DATABASE_URL");
+  const directToken = envAny("TURSO_AUTH_TOKEN", "LIBSQL_AUTH_TOKEN", "MMW_DATABASE_AUTH_TOKEN");
+  if (direct) return { url: direct.trim(), token: directToken?.trim() };
+  for (const [k, v] of Object.entries(process.env)) {
+    if (!v || !/TURSO_DATABASE_URL$/i.test(k)) continue;
+    const prefix = k.slice(0, k.length - "TURSO_DATABASE_URL".length);
+    const token = process.env[`${prefix}TURSO_AUTH_TOKEN`] ?? envAny(`${prefix}TURSO_AUTH_TOKEN`);
+    return { url: v.trim(), token: token?.trim() };
+  }
+  return null;
+}
 
 /** MMW_SIGNING_SECRET if it was actually set (the .env.example placeholder does not count). */
 export function configuredSigningSecret(): string | undefined {
@@ -21,22 +46,37 @@ export function configuredSigningSecret(): string | undefined {
 /** Read configuration at call time so tests can override process.env. */
 export function getEnv() {
   const cwd = process.cwd();
-  const anthropicKey = process.env.ANTHROPIC_API_KEY || undefined;
+  const anthropicKey = process.env.ANTHROPIC_API_KEY?.trim() || undefined;
+  const geminiKey = envAny("GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY")?.trim() || undefined;
   const providerEnv = (process.env.MMW_PROVIDER || "").toLowerCase();
   const provider: ProviderName =
-    providerEnv === "anthropic" || providerEnv === "heuristic" || providerEnv === "mock"
+    providerEnv === "anthropic" || providerEnv === "gemini" || providerEnv === "heuristic" || providerEnv === "mock"
       ? providerEnv
       : anthropicKey
         ? "anthropic"
-        : "heuristic";
+        : geminiKey
+          ? "gemini"
+          : "heuristic";
   const ocrEnv = (process.env.MMW_OCR_PROVIDER || "").toLowerCase();
   const ocrProvider: OcrProviderName =
-    ocrEnv === "anthropic" || ocrEnv === "mock" || ocrEnv === "manual" ? ocrEnv : anthropicKey ? "anthropic" : "manual";
+    ocrEnv === "anthropic" || ocrEnv === "gemini" || ocrEnv === "mock" || ocrEnv === "manual"
+      ? ocrEnv
+      : provider === "anthropic" || provider === "gemini"
+        ? provider
+        : anthropicKey
+          ? "anthropic"
+          : geminiKey
+            ? "gemini"
+            : "manual";
+  // Model IDs are provider-specific; ignore an override meant for the other provider.
+  const pick = (v: string | undefined, forGemini: boolean, dflt: string) => (v && /^gemini/i.test(v) === forGemini ? v : dflt);
+  const gem = (p: string) => p === "gemini";
   const isProd = process.env.NODE_ENV === "production";
   const onVercel = !!process.env.VERCEL;
   // Hosted libSQL (Turso). The Vercel Marketplace integration sets TURSO_DATABASE_URL / TURSO_AUTH_TOKEN.
-  const remoteUrl = process.env.TURSO_DATABASE_URL || process.env.LIBSQL_URL || process.env.MMW_DATABASE_URL || "";
-  const remoteToken = process.env.TURSO_AUTH_TOKEN || process.env.LIBSQL_AUTH_TOKEN || process.env.MMW_DATABASE_AUTH_TOKEN || undefined;
+  const turso = tursoFromEnv();
+  const remoteUrl = turso?.url ?? "";
+  const remoteToken = turso?.token || undefined;
   // Without a hosted DB on a serverless platform, fall back to /tmp (works, but resets with the instance).
   const localPath = process.env.MMW_DB_PATH || (onVercel ? "/tmp/markmywords.db" : path.join(cwd, "data", "markmywords.db"));
   return {
@@ -56,10 +96,20 @@ export function getEnv() {
     provider,
     ocrProvider,
     allowMock: process.env.MMW_ALLOW_MOCK === "true" || !isProd,
-    judgeModel: process.env.MMW_JUDGE_MODEL || "claude-sonnet-5-5",
-    fastModel: process.env.MMW_FAST_MODEL || "claude-haiku-5-5",
-    visionModel: process.env.MMW_VISION_MODEL || process.env.MMW_JUDGE_MODEL || "claude-sonnet-5-5",
+    geminiKey,
+    geminiBaseUrl: process.env.GEMINI_BASE_URL || "https://generativelanguage.googleapis.com",
+    /** Tried in order when the chosen Gemini model is unknown or out of quota. */
+    geminiFallbackModels: (process.env.MMW_GEMINI_FALLBACK_MODELS || "gemini-3.6-flash,gemini-3.5-flash-lite,gemini-flash-latest")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+    judgeModel: pick(process.env.MMW_JUDGE_MODEL, gem(provider), gem(provider) ? "gemini-3.8-flash" : "claude-sonnet-5-5"),
+    fastModel: pick(process.env.MMW_FAST_MODEL, gem(provider), gem(provider) ? "gemini-3.5-flash-lite" : "claude-haiku-5-5"),
+    visionModel: pick(process.env.MMW_VISION_MODEL || process.env.MMW_JUDGE_MODEL, gem(ocrProvider), gem(ocrProvider) ? "gemini-3.8-flash" : "claude-sonnet-5-5"),
     evalSamples: Math.min(5, Math.max(1, int(process.env.MMW_EVAL_SAMPLES, 3))),
+    // Placeholder Gemini prices (INR per million tokens); set from Google's current price list.
+    geminiPriceInputPerMTokInr: num(process.env.MMW_GEMINI_PRICE_INPUT_PER_MTOK_INR, 70),
+    geminiPriceOutputPerMTokInr: num(process.env.MMW_GEMINI_PRICE_OUTPUT_PER_MTOK_INR, 340),
     freeEvalsPerDay: int(process.env.MMW_FREE_EVALS_PER_DAY, 10),
     ocrPagesPerDay: int(process.env.MMW_OCR_PAGES_PER_DAY, 30),
     hintCallsPerHour: int(process.env.MMW_HINT_CALLS_PER_HOUR, 40),
@@ -82,6 +132,7 @@ export function getEnv() {
     maxImageBytes: int(process.env.MMW_MAX_IMAGE_BYTES, onVercel ? 4 * 1024 * 1024 : 10 * 1024 * 1024),
     maxPdfBytes: int(process.env.MMW_MAX_PDF_BYTES, onVercel ? 4 * 1024 * 1024 : 25 * 1024 * 1024),
     maxPagesPerAttempt: int(process.env.MMW_MAX_PAGES, 12),
+    signupsPerIpPerHour: int(process.env.MMW_SIGNUPS_PER_IP_PER_HOUR, 10),
   };
 }
 

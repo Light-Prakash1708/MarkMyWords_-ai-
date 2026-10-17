@@ -185,7 +185,7 @@ export const EvaluationResultSchema = z.object({
   score_kind: z.literal("ai_estimate"),
   disclaimer_version: z.string(),
   evaluator: z.object({
-    provider: z.enum(["anthropic", "heuristic", "mock"]),
+    provider: z.enum(["anthropic", "gemini", "heuristic", "mock"]),
     is_ai: z.boolean(),
     label: z.string(),
     engine_version: z.string(),

@@ -78,9 +78,9 @@ async function syncExams(db: DB, t: string) {
     const existing = (await db.get("SELECT id FROM exams WHERE code = ?", e.code)) as { id: string } | undefined;
     const examId = existing?.id ?? newId();
     if (existing) {
-      (await db.run("UPDATE exams SET name=?, short_name=?, status=?, config_version=?, input_modes=?, default_input_mode=?, ux=?, updated_at=? WHERE id=?", e.name, e.short_name, e.status, e.config_version, toJson(e.input_modes), e.default_input_mode, toJson(e.ux), t, examId));
+      (await db.run("UPDATE exams SET name=?, short_name=?, status=?, stage=?, config_version=?, input_modes=?, default_input_mode=?, ux=?, updated_at=? WHERE id=?", e.name, e.short_name, e.status, e.stage, e.config_version, toJson(e.input_modes), e.default_input_mode, toJson(e.ux), t, examId));
     } else {
-      (await db.run("INSERT INTO exams (id, code, name, short_name, status, config_version, input_modes, default_input_mode, ux, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)", examId, e.code, e.name, e.short_name, e.status, e.config_version, toJson(e.input_modes), e.default_input_mode, toJson(e.ux), t, t));
+      (await db.run("INSERT INTO exams (id, code, name, short_name, status, stage, config_version, input_modes, default_input_mode, ux, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", examId, e.code, e.name, e.short_name, e.status, e.stage, e.config_version, toJson(e.input_modes), e.default_input_mode, toJson(e.ux), t, t));
     }
     for (const p of cfg.papers) {
       const ep = (await db.get("SELECT id FROM papers WHERE code = ?", p.code)) as { id: string } | undefined;

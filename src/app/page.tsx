@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/http";
+import { isGuest } from "@/lib/services/trial";
 import { DISCLAIMER } from "@/lib/copy/disclaimer";
 import { Bunting, HangingTags, RedPenDemo, Ribbon, Squiggle, Star, Truths } from "@/components/Landing";
 
 export default async function Home() {
   const user = await currentUser();
-  if (user) redirect("/today");
+  if (user) redirect(isGuest(user) ? "/try" : "/today");
 
   return (
     <>
@@ -30,11 +31,11 @@ export default async function Home() {
             </div>
           </div>
           <div className="row reveal" style={{ justifyContent: "center", marginTop: 28, ["--d" as string]: 1 }}>
-            <Link href="/signup" className="btn lg">Start writing — it&apos;s free</Link>
-            <Link href="/how-we-evaluate" className="btn lg ghost">How we mark →</Link>
+            <Link href="/try" className="btn lg">Try 3 questions free — no sign-up</Link>
+            <Link href="/signup" className="btn lg ghost">Create free account</Link>
           </div>
           <p className="muted small" style={{ textAlign: "center", marginTop: 14 }}>
-            UPSC CSE Mains · GS-II &amp; GS-III today. RBI Grade B next. {DISCLAIMER.short}.
+            UPSC CSE Mains GS-II &amp; GS-III · RBI Grade B Phase II (preview). {DISCLAIMER.short}.
           </p>
           <div className="sign-rope" aria-hidden="true" style={{ height: 30 }} />
           <HangingTags />

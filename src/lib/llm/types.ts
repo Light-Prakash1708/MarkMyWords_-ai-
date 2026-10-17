@@ -31,11 +31,13 @@ export interface StructuredResponse<T> {
 
 /** A model provider that can return schema-validated structured output. */
 export interface LlmProvider {
-  readonly name: "anthropic" | "mock";
+  readonly name: "anthropic" | "gemini" | "mock";
   structured<T>(req: StructuredRequest<T>): Promise<StructuredResponse<T>>;
 }
 
 export class ProviderError extends Error {
+  /** Server-suggested wait before retrying (e.g. Gemini RetryInfo). */
+  retryAfterMs?: number;
   constructor(
     message: string,
     readonly retryable: boolean,

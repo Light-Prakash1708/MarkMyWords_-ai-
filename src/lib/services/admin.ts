@@ -199,7 +199,7 @@ function percentile(xs: number[], p: number) {
 
 export async function costDashboard(db: DB) {
   const evs = ((await db.all("SELECT est_cost_inr, provider FROM evaluations WHERE status = 'completed'")) as { est_cost_inr: number; provider: string }[]);
-  const ai = evs.filter((e) => e.provider === "anthropic").map((e) => e.est_cost_inr);
+  const ai = evs.filter((e) => e.provider === "anthropic" || e.provider === "gemini").map((e) => e.est_cost_inr);
   const byOp = (await db.all("SELECT operation, COUNT(*) AS n, SUM(est_cost_inr) AS inr, SUM(input_tokens) AS tin, SUM(output_tokens) AS tout FROM cost_ledger GROUP BY operation")) as {
     operation: string;
     n: number;

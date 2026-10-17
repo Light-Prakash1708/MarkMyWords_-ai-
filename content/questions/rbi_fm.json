@@ -1,0 +1,230 @@
+{
+  "exam_code": "RBI_GRADE_B",
+  "paper_code": "RBI_FM",
+  "note": "Original practice questions written for MarkMyWords in the RBI Grade B Phase II descriptive format. None is a previous-year question. All start as pending_human until a reviewer approves them.",
+  "questions": [
+    {
+      "slug": "rbi-fm-basel-buffers",
+      "question_type": "RBI_DESC_10M",
+      "text": "Explain the purpose of the capital conservation buffer and the countercyclical capital buffer under Basel III. How do they make the banking system more resilient?",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Purpose and design of each buffer",
+          "cues": [
+            "conservation",
+            "countercyclical",
+            "risk-weighted",
+            "cet1",
+            "2.5",
+            "buffer"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "How they improve resilience",
+          "cues": [
+            "procyclical",
+            "downturn",
+            "lending",
+            "dividend",
+            "resilien",
+            "credit growth"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "ELUCIDATE"
+      ],
+      "syllabus_codes": [
+        "RBI_FM.FINANCE"
+      ],
+      "dimensions_expected": [
+        "regulatory",
+        "economic"
+      ],
+      "priority_reasons": [
+        "Basel III is a staple of the Finance syllabus"
+      ],
+      "skill_tags_targeted": [
+        "CONTENT.dimension_gap",
+        "ANALYSIS.mechanism_missing"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-basel-iii-buffers"
+        ]
+      }
+    },
+    {
+      "slug": "rbi-fm-npa-ibc",
+      "question_type": "RBI_DESC_15M",
+      "text": "Gross NPAs of Indian banks have fallen sharply since their peak in 2018. Analyse the factors behind this improvement and critically assess the role of the Insolvency and Bankruptcy Code.",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Factors behind the fall in NPAs",
+          "cues": [
+            "recognition",
+            "asset quality review",
+            "recapitalisation",
+            "write-off",
+            "recovery",
+            "provision",
+            "credit"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "Critical assessment of the IBC",
+          "cues": [
+            "ibc",
+            "insolvency",
+            "resolution",
+            "creditors",
+            "delay",
+            "haircut",
+            "recovery rate"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "ANALYSE",
+        "CRITICALLY_ANALYSE"
+      ],
+      "syllabus_codes": [
+        "RBI_FM.FINANCE"
+      ],
+      "dimensions_expected": [
+        "regulatory",
+        "economic",
+        "institutional"
+      ],
+      "priority_reasons": [
+        "Asset quality and resolution are recurring F&M themes"
+      ],
+      "skill_tags_targeted": [
+        "ANALYSIS.one_sided",
+        "EVIDENCE.unsupported_claim"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-ibc"
+        ]
+      }
+    },
+    {
+      "slug": "rbi-fm-motivation",
+      "question_type": "RBI_DESC_10M",
+      "text": "Using one content theory of motivation, explain how a public sector bank can raise employee motivation without large pay increases.",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Explanation of the chosen theory",
+          "cues": [
+            "herzberg",
+            "maslow",
+            "mcclelland",
+            "hygiene",
+            "motivator",
+            "need"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "Application to a public sector bank",
+          "cues": [
+            "recognition",
+            "responsibility",
+            "growth",
+            "training",
+            "career",
+            "bank",
+            "branch",
+            "feedback"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "ELUCIDATE"
+      ],
+      "syllabus_codes": [
+        "RBI_FM.MANAGEMENT"
+      ],
+      "dimensions_expected": [
+        "organisational"
+      ],
+      "priority_reasons": [
+        "Motivation theory with application is a frequent Management question"
+      ],
+      "skill_tags_targeted": [
+        "ANALYSIS.mechanism_missing",
+        "CONTENT.irrelevance"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-motivation-theories"
+        ]
+      }
+    },
+    {
+      "slug": "rbi-fm-change-leadership",
+      "question_type": "RBI_DESC_15M",
+      "text": "Discuss the role of leadership in managing organisational change, with reference to digital transformation in banks. How can resistance from employees be reduced?",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Role of leadership in change",
+          "cues": [
+            "vision",
+            "urgency",
+            "coalition",
+            "communicat",
+            "leader",
+            "kotter",
+            "lewin"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "Reducing resistance in a bank's digital transformation",
+          "cues": [
+            "resistance",
+            "training",
+            "participation",
+            "reskill",
+            "fear",
+            "support",
+            "digital"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "DISCUSS"
+      ],
+      "syllabus_codes": [
+        "RBI_FM.MANAGEMENT"
+      ],
+      "dimensions_expected": [
+        "organisational",
+        "technological"
+      ],
+      "priority_reasons": [
+        "Change management and leadership recur in the Management section"
+      ],
+      "skill_tags_targeted": [
+        "DEMAND.parts_missed",
+        "EVIDENCE.no_examples"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-change-management"
+        ]
+      }
+    }
+  ]
+}

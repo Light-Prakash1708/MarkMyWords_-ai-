@@ -1,0 +1,99 @@
+{
+  "note": "RBI Grade B seed sources: summaries written by MarkMyWords. EVERY entry is verification_status=unverified until a reviewer checks it against the official document at official_url. Citations shown to students always display this status.",
+  "sources": [
+    {
+      "slug": "summary-basel-iii-buffers",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Basel III capital buffers",
+      "publisher": "MarkMyWords (summary of Basel Committee standards and RBI capital regulations)",
+      "official_url": "https://www.bis.org/bcbs/basel3.htm",
+      "published_on": "2026-10-17",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "Basel III added capital buffers above minimum requirements. The capital conservation buffer is 2.5 per cent of risk-weighted assets, held in Common Equity Tier 1; a bank that dips into it faces restrictions on distributions such as dividends until it rebuilds the buffer.",
+        "The countercyclical capital buffer can range from 0 to 2.5 per cent of risk-weighted assets. Regulators raise it when credit growth is excessive so that banks build capital in good times and can release it in a downturn to keep lending. The RBI framework uses the credit-to-GDP gap as a main indicator alongside other indicators. Check the RBI's current decision on the buffer before quoting its level."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "ccb-size",
+          "claim_pattern": "capital conservation buffer[^.]{0,40}?(\\d+(?:\\.\\d+)?)\\s*(?:%|per ?cent)",
+          "expected_pattern": "^2\\.5$",
+          "quote": "The capital conservation buffer is 2.5 per cent of risk-weighted assets",
+          "note": "The Basel III capital conservation buffer is 2.5% of risk-weighted assets (CET1)."
+        }
+      ]
+    },
+    {
+      "slug": "summary-ibc",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Insolvency and Bankruptcy Code",
+      "publisher": "MarkMyWords (summary of the IBC, 2016)",
+      "official_url": "https://ibbi.gov.in/",
+      "published_on": "2026-10-17",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "The Insolvency and Bankruptcy Code, 2016 created a time-bound process in which control of a defaulting company passes from the promoters to a resolution professional under the supervision of a committee of creditors. It changed debtor behaviour because promoters risk losing the company, which encouraged settlements even before admission.",
+        "Bank asset quality also improved because of the Asset Quality Review of 2015-16, which made banks recognise stressed loans as non-performing, recapitalisation of public sector banks, write-offs and recoveries. Delays beyond the statutory timelines and low recovery rates in some cases remain concerns."
+      ],
+      "heuristic_checks": [
+        {
+          "id": "ibc-year",
+          "claim_pattern": "(?:Insolvency and Bankruptcy Code|IBC)[^.]{0,40}?\\b((?:19|20)\\d{2})\\b",
+          "exclude_pattern": "amend",
+          "expected_pattern": "^2016$",
+          "quote": "The Insolvency and Bankruptcy Code, 2016",
+          "note": "The IBC was enacted in 2016."
+        }
+      ]
+    },
+    {
+      "slug": "summary-motivation-theories",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Content theories of motivation",
+      "publisher": "MarkMyWords (summary of standard management texts)",
+      "official_url": "https://www.rbi.org.in/",
+      "published_on": "2026-10-17",
+      "license": "our_summary",
+      "stale_after_days": null,
+      "chunks": [
+        "Herzberg's two-factor theory separates hygiene factors (pay, working conditions, policies, job security) from motivators (achievement, recognition, responsibility, the work itself, growth). Fixing hygiene factors removes dissatisfaction but does not by itself motivate; motivation comes from the motivators.",
+        "Maslow's hierarchy orders needs as physiological, safety, social, esteem and self-actualisation, and argues that once lower needs are reasonably met, higher needs drive behaviour. McClelland's theory focuses on the needs for achievement, affiliation and power."
+      ]
+    },
+    {
+      "slug": "summary-change-management",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Models of organisational change",
+      "publisher": "MarkMyWords (summary of standard management texts)",
+      "official_url": "https://www.rbi.org.in/",
+      "published_on": "2026-10-17",
+      "license": "our_summary",
+      "stale_after_days": null,
+      "chunks": [
+        "Lewin's model describes change in three stages: unfreeze (create readiness by showing why the current state cannot continue), change (move to new processes and behaviours) and refreeze (embed the new way through systems, rewards and culture).",
+        "Kotter's eight steps are: create urgency, build a guiding coalition, form a strategic vision, communicate the vision, remove obstacles, generate short-term wins, sustain acceleration and anchor the change in the culture. Resistance to change often comes from fear of job loss, skill obsolescence and loss of status, and is reduced by communication, participation, training and support."
+      ]
+    },
+    {
+      "slug": "summary-demographic-dividend",
+      "kind": "our_summary",
+      "text_kind": "our_summary",
+      "title": "MarkMyWords summary — Demographic dividend",
+      "publisher": "MarkMyWords (summary)",
+      "official_url": "https://www.mospi.gov.in/",
+      "published_on": "2026-10-17",
+      "license": "our_summary",
+      "stale_after_days": 730,
+      "chunks": [
+        "A demographic dividend is the growth potential that arises when the working-age share of the population rises and the dependency ratio falls. It is not automatic: it requires productive jobs, skills, health and the participation of women in the labour force; otherwise a large working-age population can mean unemployment instead.",
+        "In India, the Periodic Labour Force Survey (PLFS) published by the Ministry of Statistics and Programme Implementation is the main official source for labour force participation, unemployment and the type of employment, including the share of self-employment and casual work."
+      ]
+    }
+  ]
+}

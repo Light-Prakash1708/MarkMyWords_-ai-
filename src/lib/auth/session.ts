@@ -13,10 +13,10 @@ export interface SessionUser {
   plan: string;
 }
 
-export async function createSession(db: DB, userId: string): Promise<{ token: string; expiresAt: Date }> {
+export async function createSession(db: DB, userId: string, days = SESSION_DAYS): Promise<{ token: string; expiresAt: Date }> {
   const token = randomToken(32);
   const now = new Date();
-  const expiresAt = new Date(now.getTime() + SESSION_DAYS * 86400_000);
+  const expiresAt = new Date(now.getTime() + days * 86400_000);
   (await db.run("INSERT INTO sessions (id, user_id, token_hash, created_at, expires_at, last_seen_at) VALUES (?,?,?,?,?,?)", newId(),
     userId,
     sha256Hex(token),

@@ -1,0 +1,23 @@
+# Guest trial: anyone can try MarkMyWords without an account.
+# A guest gets a private, temporary session and can answer each question below once (plus one
+# rewrite after feedback). Signing up afterwards keeps everything they wrote.
+trial:
+  answers_per_exam: 3
+  rewrites_per_question: 1
+  guest_session_days: 7
+  # Abuse and cost controls.
+  max_new_guests_per_ip_per_day: 6
+  max_new_guests_per_day: 800
+  max_guest_evaluations_per_day: 1500
+  # Unused guest sessions (never converted to an account) are deleted after this many days.
+  purge_guests_after_days: 14
+  # The questions shown on /try, per exam. Use slugs from content/questions.
+  questions:
+    UPSC_CSE:
+      - gs2-rti-accountability
+      - gs3-monetary-transmission
+      - gs3-post-harvest-loss
+    RBI_GRADE_B:
+      - rbi-esi-inflation-targeting
+      - rbi-fm-motivation
+      - rbi-fm-basel-buffers

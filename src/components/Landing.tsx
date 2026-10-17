@@ -30,9 +30,9 @@ export function Bunting({ n = 18 }: { n?: number }) {
 
 export function HangingTags() {
   const tags = [
-    { t: "GS-II", s: "UPSC MAINS", c: "var(--pink)", href: "/signup", drop: 0 },
-    { t: "GS-III", s: "UPSC MAINS", c: "var(--sky)", href: "/signup", drop: 22 },
-    { t: "RBI GR. B", s: "COMING NEXT", c: "var(--butter)", href: "/how-we-evaluate", drop: 6 },
+    { t: "GS-II", s: "UPSC MAINS", c: "var(--pink)", href: "/try", drop: 0 },
+    { t: "GS-III", s: "UPSC MAINS", c: "var(--sky)", href: "/try", drop: 22 },
+    { t: "RBI GR. B", s: "PREVIEW", c: "var(--butter)", href: "/try", drop: 6 },
     { t: "ESSAY", s: "LATER", c: "var(--mint)", href: "/how-we-evaluate", drop: 30 },
   ];
   return (

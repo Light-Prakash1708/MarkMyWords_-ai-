@@ -5,6 +5,7 @@ import { currentUser } from "@/lib/http";
 import { getProgress, weeklyReport } from "@/lib/services/skills";
 import { LineChart } from "@/components/LineChart";
 import { ShareButton } from "@/components/ShareButton";
+import { isGuest } from "@/lib/services/trial";
 
 export const metadata = { title: "Progress" };
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ const STATUS_TONE: Record<string, string> = {
 export default async function Progress() {
   const user = await currentUser();
   if (!user) redirect("/login");
+  if (isGuest(user)) redirect("/try");
   const db = (await getDb());
   const p = (await getProgress(db, user.id));
   const w = (await weeklyReport(db, user.id));

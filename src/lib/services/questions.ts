@@ -26,6 +26,8 @@ export interface QuestionView {
   exam_code: string;
   exam_name: string;
   exam_status: string;
+  exam_stage: "live" | "preview";
+  exam_short_name: string;
   question_type_code: string;
   marks: number;
   word_limit: number | null;
@@ -37,7 +39,7 @@ export interface QuestionView {
 }
 
 const SELECT = `SELECT q.*, p.code AS paper_code, p.name AS paper_name, p.default_input_mode, e.code AS exam_code, e.name AS exam_name,
-  e.status AS exam_status, e.input_modes, e.ux, qt.code AS question_type_code, qt.marks, qt.word_limit, qt.time_budget_min, qt.word_tolerance_pct
+  e.status AS exam_status, e.stage AS exam_stage, e.short_name AS exam_short_name, e.input_modes, e.ux, qt.code AS question_type_code, qt.marks, qt.word_limit, qt.time_budget_min, qt.word_tolerance_pct
   FROM questions q JOIN papers p ON p.id = q.paper_id JOIN exams e ON e.id = p.exam_id JOIN question_types qt ON qt.id = q.question_type_id`;
 
 type Row = Record<string, unknown> & { parts: string; directive_codes: string; syllabus_codes: string; dimensions_expected: string; priority_reasons: string; skill_tags_targeted: string; input_modes: string; ux: string };
@@ -130,7 +132,7 @@ export async function scheduleQotd(db: DB, adminId: string, examCode: string, da
 }
 
 export async function paperSummaries(db: DB, examCode: string | null) {
-  return (await db.all(`SELECT p.code, p.name, p.subtitle, p.total_marks, p.duration_min, p.verification_status, p.fact_source_url, p.verified_on, e.code AS exam_code, e.status AS exam_status, e.short_name
+  return (await db.all(`SELECT p.code, p.name, p.subtitle, p.total_marks, p.duration_min, p.verification_status, p.fact_source_url, p.verified_on, p.status AS paper_status, e.code AS exam_code, e.status AS exam_status, e.stage AS exam_stage, e.short_name
        FROM papers p JOIN exams e ON e.id = p.exam_id ${examCode ? "WHERE e.code = ?" : ""} ORDER BY e.status, p.code`, ...(examCode ? [examCode] : []))) as {
     code: string;
     name: string;
@@ -140,18 +142,21 @@ export async function paperSummaries(db: DB, examCode: string | null) {
     verification_status: string;
     fact_source_url: string;
     verified_on: string;
+    paper_status: string;
     exam_code: string;
     exam_status: string;
+    exam_stage: string;
     short_name: string;
   }[];
 }
 
 export async function listExams(db: DB) {
-  return (await db.all("SELECT code, name, short_name, status, input_modes FROM exams ORDER BY status, code")) as {
+  return (await db.all("SELECT code, name, short_name, status, stage, input_modes FROM exams ORDER BY status, stage, code")) as {
     code: string;
     name: string;
     short_name: string;
     status: string;
+    stage: string;
     input_modes: string;
   }[];
 }

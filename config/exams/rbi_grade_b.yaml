@@ -1,13 +1,16 @@
 # MarkMyWords exam configuration — RBI Grade B (DR) General, Phase II
-# INACTIVE until an RBI rubric is calibrated and an RBI gold set exists.
-# Facts below come from a secondary source while the 2025 notification was awaited — verify against
-# the current RBI notification (https://opportunities.rbi.org.in) before activating.
+# PREVIEW: practisable (ESI and F&M descriptive, typed) and labelled "Preview" everywhere, because the
+# question set is small and the RBI rubric has not been calibrated against human evaluators.
+# Pattern facts come from secondary sources — verify against the current RBI notification
+# (https://opportunities.rbi.org.in). Descriptive part (secondary source, 2025): six questions, attempt
+# four — two of 15 marks (~600 words) and two of 10 marks (~400 words) — typed, in 90 minutes.
 exam:
   code: RBI_GRADE_B
   name: RBI Grade B (DR) General — Phase II
   short_name: RBI Grade B
-  status: inactive
-  config_version: 0.1.0
+  status: active
+  stage: preview
+  config_version: 0.2.0
   input_modes: [typed]
   default_input_mode: typed
   ux:
@@ -22,34 +25,34 @@ papers:
     total_marks: 50
     duration_min: 90
     default_input_mode: typed
-    fact_source_url: https://c4scourses.in/blog/rbi-grade-b-2025-syllabus-exam-pattern-2/
+    fact_source_url: https://www.ixambee.com/blog/rbi-grade-b-phase-2-strategy-to-write-2000-words-in-90-minutes
     official_reference_url: https://opportunities.rbi.org.in
-    verified_on: 2026-10-16
+    verified_on: 2026-10-17
     verification_status: secondary
     question_types:
-      - { code: RBI_DESC_10M, marks: 10, word_limit: null, time_budget_min: 18, word_tolerance_pct: 15 }
-      - { code: RBI_DESC_15M, marks: 15, word_limit: null, time_budget_min: 27, word_tolerance_pct: 15 }
+      - { code: RBI_DESC_10M, marks: 10, word_limit: 400, time_budget_min: 16, word_tolerance_pct: 15 }
+      - { code: RBI_DESC_15M, marks: 15, word_limit: 600, time_budget_min: 24, word_tolerance_pct: 15 }
     syllabus:
       - { code: RBI_ESI.GROWTH, title: "Growth and development; economic reforms", micro_topics: [growth, inflation, monetary policy] }
       - { code: RBI_ESI.SOCIAL, title: "Social structure, demographics, social justice", micro_topics: [demography, inclusion] }
-    status: inactive
+    status: active
   - code: RBI_FM
     name: Paper III — Finance and Management (descriptive part)
     subtitle: Descriptive section of Paper III
     total_marks: 50
     duration_min: 90
     default_input_mode: typed
-    fact_source_url: https://c4scourses.in/blog/rbi-grade-b-2025-syllabus-exam-pattern-2/
+    fact_source_url: https://www.ixambee.com/blog/rbi-grade-b-phase-2-strategy-to-write-2000-words-in-90-minutes
     official_reference_url: https://opportunities.rbi.org.in
-    verified_on: 2026-10-16
+    verified_on: 2026-10-17
     verification_status: secondary
     question_types:
-      - { code: RBI_DESC_10M, marks: 10, word_limit: null, time_budget_min: 18, word_tolerance_pct: 15 }
-      - { code: RBI_DESC_15M, marks: 15, word_limit: null, time_budget_min: 27, word_tolerance_pct: 15 }
+      - { code: RBI_DESC_10M, marks: 10, word_limit: 400, time_budget_min: 16, word_tolerance_pct: 15 }
+      - { code: RBI_DESC_15M, marks: 15, word_limit: 600, time_budget_min: 24, word_tolerance_pct: 15 }
     syllabus:
-      - { code: RBI_FM.FINANCE, title: "Financial system, markets, regulation", micro_topics: [banking, markets, risk management] }
+      - { code: RBI_FM.FINANCE, title: "Financial system, markets, regulation", micro_topics: [banking, markets, risk management, Basel III, NPAs and resolution] }
       - { code: RBI_FM.MANAGEMENT, title: "Management — fundamentals, HR, leadership, communication", micro_topics: [motivation, leadership, ethics] }
-    status: inactive
+    status: active
   - code: RBI_ENG
     name: Paper II — English (Writing Skills)
     subtitle: Essay, précis, reading comprehension

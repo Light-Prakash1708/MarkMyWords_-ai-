@@ -1,0 +1,240 @@
+{
+  "exam_code": "RBI_GRADE_B",
+  "paper_code": "RBI_ESI",
+  "note": "Original practice questions written for MarkMyWords in the RBI Grade B Phase II descriptive format. None is a previous-year question. All start as pending_human until a reviewer approves them.",
+  "questions": [
+    {
+      "slug": "rbi-esi-inflation-targeting",
+      "question_type": "RBI_DESC_15M",
+      "text": "India has followed flexible inflation targeting for a decade, and the 4 per cent target has been retained until 2031. Evaluate how well the framework has worked and discuss whether the target or the tolerance band should change.",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Performance of the framework (anchoring expectations, outcomes, shocks)",
+          "cues": [
+            "expectation",
+            "anchor",
+            "credibility",
+            "shock",
+            "food",
+            "breach",
+            "mpc",
+            "outcome"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "Case for or against changing the target or band",
+          "cues": [
+            "target",
+            "band",
+            "tolerance",
+            "growth",
+            "food inflation",
+            "headline",
+            "core",
+            "change"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "EVALUATE",
+        "DISCUSS"
+      ],
+      "syllabus_codes": [
+        "RBI_ESI.GROWTH"
+      ],
+      "dimensions_expected": [
+        "economic",
+        "institutional"
+      ],
+      "priority_reasons": [
+        "Monetary policy framework is core ESI syllabus",
+        "Framework reviewed in 2026 — a live policy debate"
+      ],
+      "skill_tags_targeted": [
+        "ANALYSIS.no_judgement",
+        "EVIDENCE.unsupported_claim"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-monetary-framework"
+        ]
+      }
+    },
+    {
+      "slug": "rbi-esi-financial-inclusion-dpi",
+      "question_type": "RBI_DESC_10M",
+      "text": "Discuss how digital public infrastructure has advanced financial inclusion in India, and identify the gaps that remain.",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Contribution of DPI to inclusion",
+          "cues": [
+            "upi",
+            "aadhaar",
+            "jan dhan",
+            "account",
+            "payment",
+            "credit",
+            "dpi",
+            "merchant"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "Remaining gaps",
+          "cues": [
+            "gap",
+            "literacy",
+            "fraud",
+            "credit access",
+            "rural",
+            "women",
+            "usage",
+            "cyber"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "DISCUSS"
+      ],
+      "syllabus_codes": [
+        "RBI_ESI.SOCIAL"
+      ],
+      "dimensions_expected": [
+        "economic",
+        "social",
+        "technological"
+      ],
+      "priority_reasons": [
+        "Financial inclusion recurs in ESI",
+        "Links payments policy with social outcomes"
+      ],
+      "skill_tags_targeted": [
+        "CONTENT.dimension_gap",
+        "EVIDENCE.no_examples"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-upi"
+        ]
+      }
+    },
+    {
+      "slug": "rbi-esi-demographic-dividend",
+      "question_type": "RBI_DESC_15M",
+      "text": "Examine whether India can convert its demographic dividend into faster growth. What role do employment quality, skilling and women's labour force participation play?",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Conditions for converting the dividend into growth",
+          "cues": [
+            "working-age",
+            "dependency",
+            "productivity",
+            "investment",
+            "growth",
+            "jobs"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "Role of employment quality, skilling and women's participation",
+          "cues": [
+            "skill",
+            "women",
+            "participation",
+            "informal",
+            "plfs",
+            "quality",
+            "casual"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "EXAMINE"
+      ],
+      "syllabus_codes": [
+        "RBI_ESI.SOCIAL",
+        "RBI_ESI.GROWTH"
+      ],
+      "dimensions_expected": [
+        "economic",
+        "social"
+      ],
+      "priority_reasons": [
+        "Demography and employment are core ESI themes"
+      ],
+      "skill_tags_targeted": [
+        "ANALYSIS.mechanism_missing",
+        "EVIDENCE.no_examples"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-demographic-dividend"
+        ]
+      }
+    },
+    {
+      "slug": "rbi-esi-food-inflation",
+      "question_type": "RBI_DESC_10M",
+      "text": "Food prices often drive swings in India's headline inflation. Analyse the causes of food inflation volatility and suggest measures to reduce it.",
+      "parts": [
+        {
+          "id": "p1",
+          "demand": "Causes of volatility",
+          "cues": [
+            "monsoon",
+            "supply",
+            "perishable",
+            "storage",
+            "vegetable",
+            "weather",
+            "import",
+            "shock"
+          ]
+        },
+        {
+          "id": "p2",
+          "demand": "Measures to reduce volatility",
+          "cues": [
+            "storage",
+            "cold chain",
+            "buffer",
+            "market",
+            "trade",
+            "measure",
+            "processing"
+          ]
+        }
+      ],
+      "directive_codes": [
+        "ANALYSE"
+      ],
+      "syllabus_codes": [
+        "RBI_ESI.GROWTH"
+      ],
+      "dimensions_expected": [
+        "economic",
+        "environmental"
+      ],
+      "priority_reasons": [
+        "Food inflation shapes monetary policy decisions"
+      ],
+      "skill_tags_targeted": [
+        "ANALYSIS.mechanism_missing",
+        "DEMAND.parts_missed"
+      ],
+      "dossier": {
+        "reveal_policy": "pre_attempt_allowed",
+        "source_slugs": [
+          "summary-monetary-framework"
+        ]
+      }
+    }
+  ]
+}

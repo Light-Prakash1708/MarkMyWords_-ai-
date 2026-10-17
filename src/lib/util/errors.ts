@@ -8,6 +8,7 @@ export type ErrorCode =
   | "RUNG_LOCKED"
   | "RATE_LIMITED"
   | "QUOTA_EXCEEDED"
+  | "SIGNUP_REQUIRED"
   | "SPEND_CAP"
   | "CONFLICT"
   | "UPLOAD_REJECTED"
@@ -25,6 +26,7 @@ const STATUS: Record<ErrorCode, number> = {
   RUNG_LOCKED: 403,
   RATE_LIMITED: 429,
   QUOTA_EXCEEDED: 429,
+  SIGNUP_REQUIRED: 403,
   SPEND_CAP: 503,
   CONFLICT: 409,
   UPLOAD_REJECTED: 422,

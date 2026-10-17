@@ -1,0 +1,371 @@
+{
+  "template_code": "RBI_DESC",
+  "title": "MarkMyWords RBI Grade B descriptive rubric",
+  "exam_code": "RBI_GRADE_B",
+  "paper_codes": [
+    "RBI_ESI",
+    "RBI_FM"
+  ],
+  "question_type_codes": [
+    "RBI_DESC_10M",
+    "RBI_DESC_15M"
+  ],
+  "version": "0.1.0",
+  "status": "calibrating",
+  "aggregation": "weighted_bands",
+  "max_band": 4,
+  "disclaimer": "This is MarkMyWords' own framework for RBI Grade B Phase II descriptive answers (typed). RBI does not publish a criterion-wise rubric. It has not yet been calibrated against human expert evaluators.",
+  "changelog": "0.1.0 — initial draft for ESI and Finance & Management descriptive answers. Status: calibrating (no calibration report attached).",
+  "criteria": [
+    {
+      "code": "DEMAND",
+      "name": "Question demand & directive",
+      "weight": 0.15,
+      "input_modes": [
+        "typed",
+        "student_transcribed"
+      ],
+      "skill_tags": [
+        "DEMAND.parts_missed",
+        "DEMAND.directive_misread"
+      ],
+      "notes_for_evaluator": "Judge whether every part of the question is answered and whether the answer does what the directive asks (explain, analyse, evaluate, suggest). RBI questions often pair a concept with an application or policy part — both must be answered. Do not reward length.",
+      "bands": [
+        {
+          "band": 0,
+          "descriptor_id": "DEMAND.0",
+          "descriptor": "Does not engage with what the question asks.",
+          "indicators": [
+            "answers a different question"
+          ],
+          "common_failures": [
+            "topic dump"
+          ]
+        },
+        {
+          "band": 1,
+          "descriptor_id": "DEMAND.1",
+          "descriptor": "Addresses the topic but misses most parts or misreads the directive.",
+          "indicators": [
+            "one part only"
+          ],
+          "common_failures": [
+            "defines a concept when asked to apply it"
+          ]
+        },
+        {
+          "band": 2,
+          "descriptor_id": "DEMAND.2",
+          "descriptor": "Answers some parts; directive partly followed.",
+          "indicators": [
+            "application part thin"
+          ],
+          "common_failures": [
+            "no recommendation when one is asked"
+          ]
+        },
+        {
+          "band": 3,
+          "descriptor_id": "DEMAND.3",
+          "descriptor": "Answers all parts; directive followed with minor gaps.",
+          "indicators": [
+            "all parts present"
+          ],
+          "common_failures": [
+            "uneven depth across parts"
+          ]
+        },
+        {
+          "band": 4,
+          "descriptor_id": "DEMAND.4",
+          "descriptor": "Answers every part with balanced depth and fully performs the directive.",
+          "indicators": [
+            "explicit judgement or recommendation where asked"
+          ],
+          "common_failures": []
+        }
+      ]
+    },
+    {
+      "code": "CONTENT",
+      "name": "Conceptual accuracy & coverage",
+      "weight": 0.25,
+      "input_modes": [
+        "typed",
+        "student_transcribed"
+      ],
+      "skill_tags": [
+        "CONTENT.dimension_gap",
+        "CONTENT.irrelevance"
+      ],
+      "notes_for_evaluator": "Reward correct use of economic, financial and management concepts (definitions, frameworks, regulations) and coverage of the dimensions that matter for THIS question — macroeconomic, regulatory, institutional, social, organisational. A list of loosely related terms is not a strength.",
+      "bands": [
+        {
+          "band": 0,
+          "descriptor_id": "CONTENT.0",
+          "descriptor": "Concepts absent or wrong.",
+          "indicators": [],
+          "common_failures": [
+            "confuses basic terms"
+          ]
+        },
+        {
+          "band": 1,
+          "descriptor_id": "CONTENT.1",
+          "descriptor": "One relevant concept, thinly or imprecisely explained.",
+          "indicators": [],
+          "common_failures": [
+            "textbook definition only"
+          ]
+        },
+        {
+          "band": 2,
+          "descriptor_id": "CONTENT.2",
+          "descriptor": "Core concepts correct; important dimensions missing.",
+          "indicators": [],
+          "common_failures": [
+            "misses the regulatory or organisational angle"
+          ]
+        },
+        {
+          "band": 3,
+          "descriptor_id": "CONTENT.3",
+          "descriptor": "Concepts correct and most relevant dimensions covered.",
+          "indicators": [],
+          "common_failures": [
+            "one dimension superficial"
+          ]
+        },
+        {
+          "band": 4,
+          "descriptor_id": "CONTENT.4",
+          "descriptor": "Concepts precise and well chosen; relevant dimensions covered with depth.",
+          "indicators": [],
+          "common_failures": []
+        }
+      ]
+    },
+    {
+      "code": "ANALYSIS",
+      "name": "Analysis & application",
+      "weight": 0.2,
+      "input_modes": [
+        "typed",
+        "student_transcribed"
+      ],
+      "skill_tags": [
+        "ANALYSIS.mechanism_missing",
+        "ANALYSIS.no_judgement",
+        "ANALYSIS.one_sided"
+      ],
+      "notes_for_evaluator": "Reward explanation of how and why (transmission channels, incentives, trade-offs), application of theory to the situation in the question, and a reasoned conclusion or recommendation. Assertions without reasoning are not analysis.",
+      "bands": [
+        {
+          "band": 0,
+          "descriptor_id": "ANALYSIS.0",
+          "descriptor": "Pure assertion; no reasoning.",
+          "indicators": [],
+          "common_failures": [
+            "lists without explanation"
+          ]
+        },
+        {
+          "band": 1,
+          "descriptor_id": "ANALYSIS.1",
+          "descriptor": "States outcomes without explaining how they arise.",
+          "indicators": [],
+          "common_failures": [
+            "no causal links"
+          ]
+        },
+        {
+          "band": 2,
+          "descriptor_id": "ANALYSIS.2",
+          "descriptor": "Some reasoning; theory not applied to the case, or one-sided.",
+          "indicators": [],
+          "common_failures": [
+            "theory and case kept separate"
+          ]
+        },
+        {
+          "band": 3,
+          "descriptor_id": "ANALYSIS.3",
+          "descriptor": "Clear mechanisms and application; conclusion present but thin.",
+          "indicators": [],
+          "common_failures": [
+            "recommendation not tied to the analysis"
+          ]
+        },
+        {
+          "band": 4,
+          "descriptor_id": "ANALYSIS.4",
+          "descriptor": "Mechanisms, trade-offs and application explained; conclusion follows from the analysis.",
+          "indicators": [],
+          "common_failures": []
+        }
+      ]
+    },
+    {
+      "code": "EVIDENCE",
+      "name": "Data, examples & accuracy",
+      "weight": 0.15,
+      "input_modes": [
+        "typed",
+        "student_transcribed"
+      ],
+      "skill_tags": [
+        "EVIDENCE.unsupported_claim",
+        "EVIDENCE.factual_error",
+        "EVIDENCE.outdated_data",
+        "EVIDENCE.no_examples"
+      ],
+      "notes_for_evaluator": "Reward accurate, relevant data and references (RBI reports and circulars, Economic Survey, Union Budget, committee reports, laws, recognised management frameworks) and concrete examples. A factual error affects this criterion only and must be cited from the provided sources; otherwise mark it unverifiable.",
+      "bands": [
+        {
+          "band": 0,
+          "descriptor_id": "EVIDENCE.0",
+          "descriptor": "No substantiation, or substantiation that is wrong.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 1,
+          "descriptor_id": "EVIDENCE.1",
+          "descriptor": "Generic examples only, or a significant factual error.",
+          "indicators": [],
+          "common_failures": [
+            "vague 'many studies show'"
+          ]
+        },
+        {
+          "band": 2,
+          "descriptor_id": "EVIDENCE.2",
+          "descriptor": "Some specific evidence; gaps or minor inaccuracies.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 3,
+          "descriptor_id": "EVIDENCE.3",
+          "descriptor": "Specific, accurate evidence for most claims.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 4,
+          "descriptor_id": "EVIDENCE.4",
+          "descriptor": "Precise, current and well-chosen evidence supporting the key claims.",
+          "indicators": [],
+          "common_failures": []
+        }
+      ]
+    },
+    {
+      "code": "STRUCTURE",
+      "name": "Structure & flow",
+      "weight": 0.1,
+      "input_modes": [
+        "typed",
+        "student_transcribed"
+      ],
+      "skill_tags": [
+        "STRUCTURE.weak_intro",
+        "STRUCTURE.weak_conclusion",
+        "STRUCTURE.poor_flow"
+      ],
+      "notes_for_evaluator": "Typed answers: judge FUNCTION, not template. Does the opening define or frame, does the body move logically (short paragraphs or sub-headings help a reader scan), does the end conclude or recommend? Unconventional structures that do these things are not penalised.",
+      "bands": [
+        {
+          "band": 0,
+          "descriptor_id": "STRUCTURE.0",
+          "descriptor": "No discernible organisation.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 1,
+          "descriptor_id": "STRUCTURE.1",
+          "descriptor": "Loose organisation; no framing or ending.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 2,
+          "descriptor_id": "STRUCTURE.2",
+          "descriptor": "Recognisable organisation; framing or conclusion weak.",
+          "indicators": [],
+          "common_failures": [
+            "conclusion repeats the body"
+          ]
+        },
+        {
+          "band": 3,
+          "descriptor_id": "STRUCTURE.3",
+          "descriptor": "Frames, progresses and concludes, with minor flow issues.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 4,
+          "descriptor_id": "STRUCTURE.4",
+          "descriptor": "Clear framing, logical progression and a conclusion that adds a judgement or way forward.",
+          "indicators": [],
+          "common_failures": []
+        }
+      ]
+    },
+    {
+      "code": "LANGUAGE",
+      "name": "Precision, language & word discipline",
+      "weight": 0.15,
+      "input_modes": [
+        "typed",
+        "student_transcribed"
+      ],
+      "skill_tags": [
+        "LANGUAGE.verbosity",
+        "LANGUAGE.imprecise_terms",
+        "TIME.over_limit",
+        "TIME.incomplete"
+      ],
+      "notes_for_evaluator": "Clarity, concision and correct terminology in typed prose. RBI descriptive answers carry word limits (about 400 words for 10 marks and 600 for 15 marks); word-limit status is computed by code. Never comment harshly on grammar; flag only what impairs meaning or wastes words.",
+      "bands": [
+        {
+          "band": 0,
+          "descriptor_id": "LANGUAGE.0",
+          "descriptor": "Meaning frequently unclear.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 1,
+          "descriptor_id": "LANGUAGE.1",
+          "descriptor": "Wordy or imprecise; meaning sometimes unclear.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 2,
+          "descriptor_id": "LANGUAGE.2",
+          "descriptor": "Clear but wordy or loose with terms.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 3,
+          "descriptor_id": "LANGUAGE.3",
+          "descriptor": "Clear and mostly concise; terms used correctly.",
+          "indicators": [],
+          "common_failures": []
+        },
+        {
+          "band": 4,
+          "descriptor_id": "LANGUAGE.4",
+          "descriptor": "Crisp, precise and economical.",
+          "indicators": [],
+          "common_failures": []
+        }
+      ]
+    }
+  ]
+}

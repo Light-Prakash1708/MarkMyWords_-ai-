@@ -39,6 +39,8 @@ npm start            # http://localhost:3000
 
 For development: `npm run dev`.
 
+**Free trial without an account:** `/try` lets visitors answer three questions per exam (UPSC CSE Mains and RBI Grade B, which is in preview) as a private guest; signing up keeps their work. Limits live in [`config/trial.yaml`](config/trial.yaml).
+
 **Without an API key** the app runs fully: a **rule-based demo evaluator**, clearly labelled everywhere, plus manual transcription for handwritten answers. **With an API key**, set `ANTHROPIC_API_KEY` in `.env.local` to enable the AI evaluator, handwriting OCR, exemplars, sample answers and question drafting.
 
 To make yourself an admin (review desk), add your email to `MMW_ADMIN_EMAILS` in `.env.local` and sign up or log in with it.
@@ -49,7 +51,7 @@ To make yourself an admin (review desk), add your email to `MMW_ADMIN_EMAILS` in
 
 1. In Vercel, **Add New → Project**, import `Light-Prakash1708/MarkMyWords_-ai-`. Framework preset: **Next.js** (no build settings to change).
 2. **Storage → Marketplace → Turso** (free tier): create a database and connect it to the project. This sets `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`. Tables and seed content are created automatically on the first request.
-3. Optional environment variables: `ANTHROPIC_API_KEY` (AI evaluator + OCR), `MMW_ADMIN_EMAILS` (your email, for the review desk), `MMW_SIGNING_SECRET` (any long random string; if unset, one is generated and stored in the database).
+3. Optional environment variables: a Gemini key (`GEMINI_API_KEY`, or any casing such as `Gemini_API_Key`) or `ANTHROPIC_API_KEY` for the AI evaluator and handwriting OCR; `MMW_ADMIN_EMAILS` (your email, for the review desk); `MMW_SIGNING_SECRET` (any long random string; if unset, one is generated and stored in the database). After deploying, open **Review desk → costs → Run check** to confirm the AI provider answers.
 4. **Deploy** (or Redeploy after adding variables).
 
 Without Turso the site still runs, but data lives in the function's `/tmp` and can reset at any time; a banner says so. Uploaded pages are stored in the database, photos are downsized in the browser to stay under Vercel's 4.5 MB request limit, and evaluations run after the response via `after()` (no background worker needed). `npm run test:e2e:vercel` runs the end-to-end suite in this mode.

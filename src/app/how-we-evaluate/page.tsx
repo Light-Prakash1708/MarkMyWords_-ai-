@@ -41,7 +41,7 @@ export default async function HowWeEvaluate() {
           <ol className="small" style={{ paddingLeft: 20, display: "grid", gap: 6 }}>
             <li>Code counts words and checks the word limit. The model never computes your total.</li>
             <li>We retrieve source material linked to the question. Only these sources can be cited.</li>
-            <li>{env.provider === "anthropic" ? `The AI evaluator judges your answer ${env.evalSamples} times independently against the rubric.` : "In demo mode, a rule-based evaluator applies simple checks (no AI)."}</li>
+            <li>{env.provider === "anthropic" || env.provider === "gemini" ? `The AI evaluator judges your answer ${env.evalSamples} times independently against the rubric.` : "In demo mode, a rule-based evaluator applies simple checks (no AI)."}</li>
             <li>We take the median band per criterion. Where passes disagree, confidence drops and the range widens.</li>
             <li>Every comment must quote your answer exactly; quotes that cannot be found are discarded.</li>
             <li>Factual corrections need a citation that exactly matches a source passage, or they become “uncertain”.</li>
@@ -94,7 +94,7 @@ export default async function HowWeEvaluate() {
               <tbody>
                 {papers.map((p) => (
                   <tr key={p.code}>
-                    <td>{p.short_name} · {p.name}{p.exam_status !== "active" && <span className="chip dashed" style={{ marginLeft: 6 }}>not live</span>}</td>
+                    <td>{p.short_name} · {p.name}{p.exam_status !== "active" || p.paper_status !== "active" ? <span className="chip dashed" style={{ marginLeft: 6 }}>not live</span> : p.exam_stage === "preview" ? <span className="chip" style={{ marginLeft: 6 }}>preview</span> : null}</td>
                     <td className="mono small">{p.total_marks ?? "?"} marks · {p.duration_min ?? "?"} min</td>
                     <td className="small"><a href={p.fact_source_url} target="_blank" rel="noreferrer noopener">{p.verification_status}</a> · {p.verified_on}</td>
                   </tr>

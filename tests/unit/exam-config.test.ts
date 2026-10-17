@@ -15,10 +15,21 @@ describe("exam configuration", () => {
       }
     }
   });
-  it("keeps the second exam inactive until it has a calibrated rubric", () => {
-    const inactive = loadExamConfigs().filter((c) => c.exam.status === "inactive");
-    expect(inactive.length).toBeGreaterThanOrEqual(1);
-    for (const c of inactive) expect(c.exam.input_modes).toEqual(["typed"]);
+  it("keeps the second exam out of full launch (preview or inactive) until it has a calibrated rubric", () => {
+    const notLive = loadExamConfigs().filter((c) => c.exam.status === "inactive" || c.exam.stage === "preview");
+    expect(notLive.length).toBeGreaterThanOrEqual(1);
+    for (const c of notLive) expect(c.exam.input_modes).toEqual(["typed"]);
+  });
+  it("every active paper has questions and a rubric for each of its question types", () => {
+    const qs = loadQuestionFiles();
+    const rubrics = loadRubricTemplates();
+    for (const c of loadExamConfigs()) {
+      if (c.exam.status !== "active") continue;
+      for (const p of c.papers.filter((x) => x.status === "active")) {
+        expect(qs.some((f) => f.paper_code === p.code && f.questions.length >= 3)).toBe(true);
+        for (const qt of p.question_types) expect(rubrics.some((r) => r.exam_code === c.exam.code && r.question_type_codes.includes(qt.code))).toBe(true);
+      }
+    }
   });
   it("rejects an invalid exam config", async () => {
     const dir = tempDir();

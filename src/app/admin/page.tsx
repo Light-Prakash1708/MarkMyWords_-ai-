@@ -4,7 +4,7 @@ import { getDb } from "@/lib/db";
 import { currentUser } from "@/lib/http";
 import { auditLog, costDashboard, listDisputes, listRubricVersions, listSources, reviewQueue } from "@/lib/services/admin";
 import { paperSummaries } from "@/lib/services/questions";
-import { ActivateRubric, DisputeResolver, GenerateForm, QotdForm, ReviewButtons, VerifySource } from "@/components/AdminActions";
+import { ActivateRubric, DisputeResolver, GenerateForm, ProviderCheck, QotdForm, ReviewButtons, VerifySource } from "@/components/AdminActions";
 import { ReviewBadge } from "@/components/QuestionBits";
 
 export const metadata = { title: "Review desk" };
@@ -43,7 +43,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       )}
 
       {tab === "qotd" && (await (async () => {
-        const papers = (await paperSummaries(db, null)).filter((p) => p.exam_status === "active");
+        const papers = (await paperSummaries(db, null)).filter((p) => p.exam_status === "active" && p.paper_status === "active");
         const examCode = papers[0]?.exam_code ?? "";
         const approved = (await reviewQueue(db)).filter((q) => q.review_status === "approved").map((q) => ({ id: q.id, text: q.text }));
         const sources = (await listSources(db)).map((s) => ({ id: s.id, title: s.title }));
@@ -95,6 +95,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         const c = (await costDashboard(db));
         return (
           <div className="stack">
+            <ProviderCheck />
             <dl className="spec">
               <div><dt>Today (est.)</dt><dd>₹{c.today_inr.toFixed(2)} / ₹{c.cap_inr}</dd></div>
               <div><dt>Evaluations</dt><dd>{c.evaluations_total} ({c.evaluations_ai} AI)</dd></div>

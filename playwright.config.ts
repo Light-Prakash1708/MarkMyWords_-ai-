@@ -31,6 +31,8 @@ export default defineConfig({
       MMW_ALLOW_MOCK: "true",
       MMW_INSECURE_COOKIES: "true",
       MMW_ADMIN_EMAILS: "admin@e2e.test",
+      // Every E2E sign-up comes from localhost.
+      MMW_SIGNUPS_PER_IP_PER_HOUR: "500",
       ANTHROPIC_API_KEY: "",
       ...(simulateVercel ? { VERCEL: "1", MMW_SIGNING_SECRET: "" } : { MMW_SIGNING_SECRET: "e2e-signing-secret" }),
     },

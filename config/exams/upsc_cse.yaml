@@ -6,6 +6,7 @@ exam:
   name: UPSC Civil Services Examination — Mains
   short_name: UPSC CSE
   status: active
+  stage: live
   config_version: 1.0.0
   input_modes: [handwritten, typed]
   default_input_mode: handwritten

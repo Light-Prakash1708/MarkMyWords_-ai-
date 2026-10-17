@@ -31,7 +31,7 @@ export function ThemeToggle() {
       <g><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" /></g>
     );
   return (
-    <button type="button" onClick={next} className="btn ghost sm icon-btn" style={{ color: "var(--paper)", borderColor: "rgba(251,245,234,.35)", minWidth: 40 }} aria-label={`Theme: ${mode}. Click to change.`} title={`Theme: ${mode}`}>
+    <button type="button" onClick={next} className="btn ghost sm icon-btn" style={{ color: "var(--inv-fg)", borderColor: "rgba(251,245,234,.35)", minWidth: 40 }} aria-label={`Theme: ${mode}. Click to change.`} title={`Theme: ${mode}`}>
       <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">{icon}</svg>
     </button>
   );

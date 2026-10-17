@@ -21,7 +21,7 @@ export function ReviewBadge({ status }: { status: QuestionView["review_status"] 
 export function QuestionMeta({ q }: { q: QuestionView }) {
   return (
     <div className="row" style={{ gap: 6 }}>
-      <span className="chip ink">{q.paper_code.replace(/^GS/, "GS-")}</span>
+      <span className="chip ink">{q.paper_code.replace(/^GS(\d)/, "GS-$1").replace(/_/g, " ")}</span>
       <span className="chip">{q.marks} marks</span>
       {q.word_limit && <span className="chip">~{q.word_limit} words</span>}
       <span className="chip">{q.time_budget_min} min</span>
@@ -36,8 +36,11 @@ export function QuestionCard({ q, reason, cta = "Write an answer", tone }: { q: 
   return (
     <Link href={`/q/${q.slug}`} className={`card pastel lift ${tone ?? pastelFor(q.slug)}`} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <div className="row between">
-        <span className="label">{q.paper_name}</span>
-        <ReviewBadge status={q.review_status} />
+        <span className="label">{q.exam_stage === "preview" ? `${q.exam_short_name} · ` : ""}{q.paper_name}</span>
+        <span className="row" style={{ gap: 6 }}>
+          {q.exam_stage === "preview" && <span className="chip" title="New exam: small question set, uncalibrated rubric">Preview</span>}
+          <ReviewBadge status={q.review_status} />
+        </span>
       </div>
       <p style={{ margin: 0, fontWeight: 650, fontSize: "1.05rem", lineHeight: 1.35 }}>{q.text}</p>
       {reason && <p className="small" style={{ margin: 0, fontStyle: "italic" }}>{reason}</p>}

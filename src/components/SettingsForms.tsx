@@ -44,7 +44,7 @@ export function ConsentToggles({ initial }: { initial: { purpose: string; grante
   );
 }
 
-export function ProfileForm({ name, exam, exams }: { name: string; exam: string | null; exams: { code: string; name: string; status: string }[] }) {
+export function ProfileForm({ name, exam, exams }: { name: string; exam: string | null; exams: { code: string; name: string; status: string; stage?: string }[] }) {
   const [msg, setMsg] = useState<string | null>(null);
   return (
     <form
@@ -64,7 +64,7 @@ export function ProfileForm({ name, exam, exams }: { name: string; exam: string 
       <div className="field">
         <label htmlFor="ex">Exam</label>
         <select id="ex" name="target_exam_code" className="select" defaultValue={exam ?? undefined}>
-          {exams.map((e) => <option key={e.code} value={e.code} disabled={e.status !== "active"}>{e.name}{e.status !== "active" ? " — coming next" : ""}</option>)}
+          {exams.map((e) => <option key={e.code} value={e.code} disabled={e.status !== "active"}>{e.name}{e.status !== "active" ? " — coming next" : e.stage === "preview" ? " (preview)" : ""}</option>)}
         </select>
       </div>
       <div className="row"><button className="btn" type="submit">Save</button>{msg && <span className="small">{msg}</span>}</div>

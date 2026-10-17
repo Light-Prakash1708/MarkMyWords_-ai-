@@ -13,6 +13,7 @@ import { newId, nowIso, randomToken, sha256Hex } from "../util/ids";
 import { normalizeText, wordCount } from "../util/text";
 import { getPracticableQuestion, getQuestion } from "./questions";
 import { enqueue } from "./jobs";
+import { assertGuestMayAttempt, GUEST_PLAN } from "./trial";
 
 export type AttemptStatus = "draft" | "submitted" | "awaiting_transcription" | "awaiting_confirmation" | "ready" | "evaluating" | "evaluated" | "failed";
 
@@ -54,6 +55,8 @@ export async function createAttempt(db: DB, userId: string, input: unknown): Pro
   if (!p.success) throw invalid("Invalid attempt.", p.error.flatten().fieldErrors);
   (await rateLimit(db, `attempt:create:${userId}`, 60, 3600));
   const q = (await getPracticableQuestion(db, p.data.question_id));
+  const owner = (await db.get("SELECT plan FROM users WHERE id = ?", userId)) as { plan: string } | undefined;
+  if (owner?.plan === GUEST_PLAN) await assertGuestMayAttempt(db, userId, q, p.data.attempt_kind);
   if (!q.input_modes.includes(p.data.mode)) throw invalid(`${q.exam_name} answers are ${q.input_modes.join(" or ")} only.`);
   let parent: AttemptRow | null = null;
   let draft = "";
