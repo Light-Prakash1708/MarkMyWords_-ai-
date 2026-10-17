@@ -18,7 +18,9 @@ export function RevealRoot() {
     els().forEach((e) => io.observe(e));
     const mo = new MutationObserver(() => els().forEach((e) => io.observe(e)));
     mo.observe(document.body, { childList: true, subtree: true });
-    return () => { io.disconnect(); mo.disconnect(); };
+    // Safety net: anything on screen that the observer missed (odd layouts, slow hydration) appears.
+    const t = window.setInterval(() => els().forEach((e) => { if (e.getBoundingClientRect().top < window.innerHeight) e.classList.add("in"); }), 1500);
+    return () => { io.disconnect(); mo.disconnect(); window.clearInterval(t); };
   }, [path]);
   return null;
 }

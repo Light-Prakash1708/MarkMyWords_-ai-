@@ -91,6 +91,18 @@ describe("Gemini provider", () => {
     expect(JSON.stringify(calls[1].body.systemInstruction)).toContain("did not match the schema");
   });
 
+  it("steps down to simpler requests on an unexplained 400 INVALID_ARGUMENT", async () => {
+    const bad = () => err(400, { error: { code: 400, message: "Request contains an invalid argument.", status: "INVALID_ARGUMENT" } });
+    const { calls, fetchImpl } = stub([bad(), bad(), ok('{"verdict":"good","points":["a"]}')]);
+    const r = await new GeminiProvider("k", { fetchImpl, sleep: noSleep }).structured(req());
+    expect(r.output.verdict).toBe("good");
+    const gc = calls.map((c) => c.body.generationConfig as Record<string, unknown>);
+    expect(gc[0].responseJsonSchema).toBeDefined();
+    expect(gc[1].responseJsonSchema).toBeUndefined();
+    expect(gc[1].thinkingConfig).toBeDefined();
+    expect(gc[2].thinkingConfig).toBeUndefined();
+  });
+
   it("does not retry a blocked prompt or a bad key", async () => {
     const { calls, fetchImpl } = stub([err(400, { error: { message: "API key not valid. Please pass a valid API key." } })]);
     await expect(new GeminiProvider("bad", { fetchImpl, sleep: noSleep }).structured(req())).rejects.toThrow(/400/);
@@ -116,8 +128,8 @@ describe("Gemini provider", () => {
   });
 
   it("reduces schemas to the documented subset", () => {
-    const s = toGeminiSchema({ type: "object", properties: { a: { type: "string", minLength: 3, pattern: "x", const: "k" }, b: { oneOf: [{ type: "string" }, { type: "null" }] } }, required: ["a"], additionalProperties: false, $schema: "x" }) as Record<string, unknown>;
-    expect(s).toEqual({ type: "object", properties: { a: { type: "string", enum: ["k"] }, b: { anyOf: [{ type: "string" }, { type: "null" }] } }, required: ["a"], additionalProperties: false });
+    const s = toGeminiSchema({ type: "object", properties: { a: { type: "string", minLength: 3, pattern: "x", const: "k" }, b: { oneOf: [{ type: "string" }, { type: "null" }] }, n: { type: "integer", enum: [0, 1, 2] } }, required: ["a"], additionalProperties: false, $schema: "x" }) as Record<string, unknown>;
+    expect(s).toEqual({ type: "object", properties: { a: { type: "string", enum: ["k"] }, b: { anyOf: [{ type: "string" }, { type: "null" }] }, n: { type: "integer" } }, required: ["a"], additionalProperties: false });
     expect(extractJson('Here you go: {"a":1} thanks')).toEqual({ a: 1 });
   });
 });

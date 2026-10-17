@@ -16,7 +16,7 @@ import { type LlmProvider, ProviderError, type StructuredRequest, type Structure
 
 const ALLOWED_KEYS = new Set([
   "type", "description", "title", "properties", "required", "additionalProperties", "enum", "format",
-  "minimum", "maximum", "items", "prefixItems", "minItems", "maxItems", "anyOf", "nullable", "$ref", "$defs",
+  "minimum", "maximum", "items", "minItems", "maxItems", "anyOf", "$ref", "$defs",
 ]);
 
 /** Reduce a Zod-generated JSON Schema to the subset Gemini documents as supported. */
@@ -27,7 +27,12 @@ export function toGeminiSchema(schema: unknown): unknown {
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(src)) {
     if (k === "const") {
-      out.enum = [v];
+      if (typeof v === "string") out.enum = [v];
+      continue;
+    }
+    if (k === "enum") {
+      // Gemini only accepts string enums; numeric/boolean enums are enforced by Zod instead.
+      if (Array.isArray(v) && v.every((x) => typeof x === "string")) out.enum = v;
       continue;
     }
     if (k === "oneOf") {
@@ -117,7 +122,8 @@ export class GeminiProvider implements LlmProvider {
       } catch (e) {
         lastErr = e;
         // Try the next model only when this one is unavailable or out of quota.
-        if (!(e instanceof ProviderError) || !(e.status === 404 || e.status === 429 || (e.status === 403 && /model/i.test(e.message)))) throw e;
+        const tryNext = e instanceof ProviderError && (e.status === 404 || e.status === 429 || (e.status === 400 && !/API key|blocked/i.test(e.message)) || (e.status === 403 && /model/i.test(e.message)));
+        if (!tryNext) throw e;
       }
     }
     throw lastErr instanceof Error ? lastErr : new ProviderError("Gemini request failed", false);
@@ -147,13 +153,22 @@ export class GeminiProvider implements LlmProvider {
         return { output: parsed.data, usage, model: json.modelVersion || model };
       } catch (e) {
         lastErr = e;
-        if (e instanceof ProviderError && e.status === 400 && useThinking && /thinking/i.test(e.message)) {
-          useThinking = false; // this model rejects the thinking setting; use its default
-          continue;
-        }
-        if (e instanceof ProviderError && e.status === 400 && useSchemaField && /schema|responseJsonSchema|response_json_schema|Unknown name/i.test(e.message)) {
-          useSchemaField = false; // older API surface: describe the schema in the prompt instead
-          continue;
+        // A 400 that is not about the key or a blocked prompt usually means part of our request is
+        // not accepted by this model (often without saying which). Step down to simpler requests:
+        // thinking setting (if named) → strict schema → thinking setting → give up.
+        if (e instanceof ProviderError && e.status === 400 && !/API key|blocked/i.test(e.message)) {
+          if (useThinking && /thinking/i.test(e.message)) {
+            useThinking = false;
+            continue;
+          }
+          if (useSchemaField) {
+            useSchemaField = false; // describe the schema in the prompt instead; Zod still validates
+            continue;
+          }
+          if (useThinking) {
+            useThinking = false;
+            continue;
+          }
         }
         const retryable = e instanceof ProviderError ? e.retryable : (e as Error).name === "AbortError" || e instanceof TypeError;
         if (!retryable || attempt === 3) break;

@@ -26,7 +26,7 @@ test("anyone can try an RBI question without an account and see feedback", async
   // Trial page reflects progress; a non-trial question is blocked for guests.
   await page.goto("/try");
   await expect(page.locator("article", { hasText: "content theory of motivation" }).getByRole("link", { name: /See my feedback/ })).toBeVisible();
-  await expect(page.getByText(/2 of 3 free answers left/).first()).toBeVisible();
+  await expect(page.getByLabel(/2 of 3 free answers left/).first()).toBeVisible();
   const blocked = await page.request.post("/api/attempts", { data: { question_id: "gs2-ec-independence", mode: "typed" } });
   expect(blocked.status()).toBe(403);
   expect((await blocked.json()).error.code).toBe("SIGNUP_REQUIRED");

@@ -28,8 +28,9 @@ export function Bunting({ n = 18 }: { n?: number }) {
   );
 }
 
-export function HangingTags() {
-  const tags = [
+export type HangingTag = { t: string; s: string; c: string; href: string; drop: number };
+export function HangingTags({ tags: custom }: { tags?: HangingTag[] } = {}) {
+  const tags: HangingTag[] = custom ?? [
     { t: "GS-II", s: "UPSC MAINS", c: "var(--pink)", href: "/try", drop: 0 },
     { t: "GS-III", s: "UPSC MAINS", c: "var(--sky)", href: "/try", drop: 22 },
     { t: "RBI GR. B", s: "PREVIEW", c: "var(--butter)", href: "/try", drop: 6 },
