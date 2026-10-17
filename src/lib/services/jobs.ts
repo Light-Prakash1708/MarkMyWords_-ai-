@@ -43,6 +43,17 @@ export async function hasPendingJobs(db: DB): Promise<boolean> {
   return !!(await db.get("SELECT 1 AS x FROM jobs WHERE status IN ('queued','running') LIMIT 1"));
 }
 
+export const DETAIL_SEP = "\n\nTechnical details: ";
+
+/** Provider error text with anything that looks like a credential removed. */
+export function scrubDetail(message: string): string {
+  return message
+    .replace(/AIza[0-9A-Za-z_-]{20,}/g, "[redacted]")
+    .replace(/(key|token|secret|authorization)\s*[=:]\s*\S+/gi, "$1=[redacted]")
+    .replace(/sk-[A-Za-z0-9_-]{16,}/g, "[redacted]")
+    .slice(0, 300);
+}
+
 /** What a student sees when background work fails (details stay in jobs.last_error and logs). */
 export function studentFacingError(kind: JobKind, message: string): string {
   const what = kind === "evaluate" ? "The AI evaluator" : "Handwriting reading";
@@ -112,10 +123,10 @@ export async function runPendingJobs(db: DB, max?: number): Promise<number> {
           (await db.run("UPDATE jobs SET status = 'failed', last_error = ?, updated_at = ? WHERE id = ?", msg, nowIso(), job.id));
           if (job.kind === "evaluate") {
             const { markEvaluationFailed } = await import("./evaluations");
-            (await markEvaluationFailed(db, payload.evaluation_id, studentFacingError("evaluate", msg)));
+            (await markEvaluationFailed(db, payload.evaluation_id, studentFacingError("evaluate", msg) + DETAIL_SEP + scrubDetail(msg)));
           } else if (job.kind === "ocr") {
             const { markOcrFailed } = await import("./ocr-jobs");
-            (await markOcrFailed(db, payload.attempt_id, studentFacingError("ocr", msg)));
+            (await markOcrFailed(db, payload.attempt_id, studentFacingError("ocr", msg) + DETAIL_SEP + scrubDetail(msg)));
           }
         }
       }

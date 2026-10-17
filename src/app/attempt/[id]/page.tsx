@@ -111,7 +111,17 @@ export default async function AttemptPage({ params }: { params: Promise<{ id: st
     const failed = ev?.status === "failed" ? ev.error : null;
     body = (
       <>
-        {failed && <div className="error-box" style={{ marginBottom: 14 }}>{failed}</div>}
+        {failed && (
+          <div className="error-box" style={{ marginBottom: 14 }}>
+            {failed.split("\n\nTechnical details: ")[0]}
+            {failed.includes("\n\nTechnical details: ") && (
+              <details style={{ marginTop: 6, fontWeight: 400 }}>
+                <summary className="tiny">Technical details</summary>
+                <code className="tiny" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{failed.split("\n\nTechnical details: ")[1]}</code>
+              </details>
+            )}
+          </div>
+        )}
         <SelfAssess attemptId={a.id} criteria={crit} maxBand={rv.max_band} existing={(await getSelfAssessment(db, a.id))?.ratings ?? null} aiAvailable={aiAvailable} />
       </>
     );

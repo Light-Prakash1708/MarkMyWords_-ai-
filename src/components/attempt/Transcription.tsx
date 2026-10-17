@@ -19,7 +19,7 @@ export function PenSpinner({ label }: { label: string }) {
         <path d="M5 40 C20 10 30 50 45 25 S70 45 80 20 S105 40 115 15" />
       </svg>
       <h2 className="h3" style={{ marginTop: 10 }}>{label}</h2>
-      <p className="small muted">This usually takes a few seconds.</p>
+      <p className="small muted">This page updates by itself — you can keep it open.</p>
     </div>
   );
 }

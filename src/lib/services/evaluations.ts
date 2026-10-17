@@ -217,7 +217,7 @@ export async function runEvaluationJob(db: DB, evaluationId: string) {
 export async function markEvaluationFailed(db: DB, evaluationId: string, message: string) {
   const ev = (await db.get("SELECT attempt_id FROM evaluations WHERE id = ?", evaluationId)) as { attempt_id: string } | undefined;
   if (!ev) return;
-  (await db.run("UPDATE evaluations SET status = 'failed', error = ? WHERE id = ?", message.slice(0, 500), evaluationId));
+  (await db.run("UPDATE evaluations SET status = 'failed', error = ? WHERE id = ?", message.slice(0, 800), evaluationId));
   (await db.run("UPDATE attempts SET status = 'ready', updated_at = ? WHERE id = ? AND status = 'evaluating'", nowIso(), ev.attempt_id));
 }
 
